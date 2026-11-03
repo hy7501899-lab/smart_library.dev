@@ -4,7 +4,7 @@
 
 "use strict";
 
-// 1. التأكد من وجود جلسة دخول حقيقية
+// التحقق من أن المستخدم مسجل دخول
 if (typeof isLoggedIn === "function" && !isLoggedIn()) {
     window.location.replace("login.html");
 }
@@ -22,18 +22,11 @@ function escapeHTML(value) {
     });
 }
 
-function formatMoney(value) {
-    return (Number(value) || 0).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-}
-
 let myBooks = [];
 let favorites = [];
 
 // ========================================
-// 2. عرض وتعديل بيانات الشخص الفعلي
+// 1. ACCOUNT INFORMATION (Real User Data)
 // ========================================
 
 function fillAccount(account) {
@@ -47,7 +40,7 @@ function fillAccount(account) {
 }
 
 function loadAccount() {
-    // جلب بيانات الشخص الفعلي الذي قام بتسجيل الدخول دون فرض أي اسم آخر
+    // جلب بيانات الشخص الفعلي المسجل حالياً
     const currentUser = typeof getUser === "function" ? getUser() : JSON.parse(localStorage.getItem("smart_library_user") || "{}");
     fillAccount(currentUser);
 }
@@ -95,7 +88,7 @@ if (accountForm) {
 }
 
 // ========================================
-// 3. عرض الكتب والمدفوعات
+// 2. BOOK LISTS & PAYMENTS
 // ========================================
 
 function renderMyBooks() {
@@ -162,7 +155,6 @@ function renderPayments() {
     }
 }
 
-// 4. تشغيل الدالة فور تحضير الصفحة
 document.addEventListener("DOMContentLoaded", function () {
     loadAccount();
     renderMyBooks();
