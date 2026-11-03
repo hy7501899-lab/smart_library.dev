@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Library | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="session.js" defer></script>
+    <script src="dashboard.js" defer></script>
+</head>
+<body>
+<header class="dashboard-navbar">
+    <a href="home.html" class="brand">📚 Smart Library</a>
+
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="catalogue.html">Catalogue</a>
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="login.html" id="logoutLink">Logout</a>
+    </nav>
+</header>
+<main class="dashboard-container">
+    <section class="welcome-section">
+        <div>
+            <p class="eyebrow">YOUR PERSONAL LIBRARY</p>
+            <h1>My Dashboard</h1>
+            <p>Manage your account, books, favorites, and payments in one place.</p>
+        </div>
+        <a href="catalogue.html" class="main-button">Explore Books →</a>
+    </section>
+    <section class="stats-grid">
+        <article class="stat-card">
+            <div class="stat-icon purple">📚</div>
+            <div>
+                <p>My Books</p>
+                <h2 id="booksCount">0</h2>
+            </div>
+        </article>
+        <article class="stat-card">
+            <div class="stat-icon pink">♥</div>
+            <div>
+                <p>Favorites</p>
+                <h2 id="favoritesCount">0</h2>
+            </div>
+        </article>
+        <article class="stat-card">
+            <div class="stat-icon blue">💳</div>
+            <div>
+                <p>Payments</p>
+                <h2 id="paymentsCount">0</h2>
+            </div>
+        </article>
+        <article class="stat-card">
+            <div class="stat-icon green">✓</div>
+            <div>
+                <p>Completed Payments</p>
+                <h2 id="completedCount">0</h2>
+            </div>
+        </article>
+    </section>
+    <section class="dashboard-grid">
+        <article class="panel account-panel" id="account">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">PERSONAL INFORMATION</p>
+                    <h2>My Account</h2>
+                </div>
+                <span class="heading-icon">👤</span>
+            </div>
+            <form id="accountForm">
+                <label for="userName">Full Name</label>
+                <input id="userName" type="text" placeholder="Enter your name" required>
+                <label for="userEmail">Email Address</label>
+                <input id="userEmail" type="email" placeholder="Enter your email" required>
+                <label for="userPhone">Phone Number</label>
+                <input id="userPhone" type="tel" placeholder="Enter your phone number">
+                <button type="submit" class="main-button full-button">Save Changes</button>
+                <p id="accountMessage" class="message" aria-live="polite"></p>
+            </form>
+        </article>
+        <article class="panel" id="my-books">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">YOUR COLLECTION</p>
+                    <h2>My Books</h2>
+                </div>
+                <a href="catalogue.html" class="small-link">Browse Books →</a>
+            </div>
+            <div id="myBooksList" class="book-list"></div>
+        </article>
+        <article class="panel" id="favorites">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">SAVED FOR LATER</p>
+                    <h2>Favorite List</h2>
+                </div>
+                <span class="heading-icon">♥</span>
+            </div>
+            <div id="favoritesList" class="book-list"></div>
+        </article>
+        <article class="panel" id="payments">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">PAYMENT HISTORY</p>
+                    <h2>My Payments</h2>
+                </div>
+                <span class="heading-icon">💳</span>
+            </div>
+            <div class="payment-summary">
+                <span>Total recorded payments</span>
+                <strong id="totalPayments">0.00 EGP</strong>
+            </div>
+            <div id="paymentsList" class="payments-list"></div>
+            <p class="note">
+                This section displays saved payment records only. It does not process real payments.
+            </p>
+        </article>
+    </section>
+    <footer class="dashboard-footer">
+        <a href="home.html">← Back to Home</a>
+        <p>© 2026 Smart Library. Learn something new every day.</p>
+    </footer>
+</main>
+</body>
+</html>

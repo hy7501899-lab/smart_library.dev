@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Smart Library</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="session.js" defer></script>
+    <script src="auth.js" defer></script>
+    <script src="chatbot.js" defer></script>
+</head>
+<body class="auth-page">
+
+<header class="navbar inner-navbar">
+    <a href="home.html" class="logo">📚 Smart Library</a>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="catalogue.html">Catalogue</a>
+        <a href="login.html">Login</a>
+    </nav>
+</header>
+
+<main class="auth-layout">
+    <section class="auth-card">
+        <div class="auth-icon">📚</div>
+        <p class="subtitle">START YOUR JOURNEY</p>
+        <h1>Create Account</h1>
+        <p class="auth-description">
+            Join our community and discover your next favorite book.
+        </p>
+
+        <form id="registerForm">
+            <label for="fullName">Full Name</label>
+            <input id="fullName" type="text"
+                   placeholder="Enter your full name" required>
+
+            <label for="registerEmail">Email Address</label>
+            <input id="registerEmail" type="email"
+                   placeholder="you@example.com" required>
+
+            <label for="registerPassword">Password</label>
+            <input id="registerPassword" type="password"
+                   placeholder="At least 8 characters" minlength="8" required>
+
+            <label for="confirmPassword">Confirm Password</label>
+            <input id="confirmPassword" type="password"
+                   placeholder="Repeat your password" minlength="8" required>
+
+            <button type="submit" class="auth-submit">
+                Create Account
+            </button>
+
+            <p id="registerMessage" class="form-message"
+               aria-live="polite"></p>
+        </form>
+
+        <p class="auth-switch">
+            Already have an account?
+            <a href="login.html">Login</a>
+        </p>
+    </section>
+</main>
+
+</body>
+</html>

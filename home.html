@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#211536">
+    <title>Smart Library | Home</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="session.js" defer></script>
+    <script src="chatbot.js" defer></script>
+</head>
+<body class="home-page">
+
+    <!-- Navigation -->
+    <header class="navbar">
+        <a href="home.html" class="logo">📚 Smart Library</a>
+
+        <nav>
+            <a href="home.html">Home</a>
+            <a href="catalogue.html">Catalogue</a>
+            <a href="login.html" id="authLink">Login</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="register.html" class="nav-btn" id="registerLink">Get Started</a>
+        </nav>
+    </header>
+
+    <main>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+
+            <video class="hero-video" autoplay muted loop playsinline>
+                <source src="./854417-uhd_3840_2160_25fps (1) (1) (1).mp4" type="video/mp4">
+            </video>
+
+            <div class="hero-overlay"></div>
+
+            <div class="hero-content">
+                <h1>
+                    Discover a World<br>
+                    of <span>Knowledge</span>
+                </h1>
+                 <br><br>
+                <div class="hero-buttons">
+                    <a href="catalogue.html" class="primary-btn">
+                        Explore Books →
+                    </a>
+                    <a href="register.html" class="secondary-btn">
+                        Join Our Community
+                    </a>
+                </div>
+            </div>
+        </section>
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <div class="welcome-text">
+                <p class="section-kicker">WELCOME TO SMART LIBRARY</p>
+
+                <h2>
+                    More Than Books.<br>
+                    A World of <span>Possibilities.</span>
+                </h2>
+
+                <p>
+                    Whether you want to learn programming, explore
+                    artificial intelligence, improve your creativity,
+                    or discover business ideas, Smart Library helps
+                    you find your next learning adventure.
+                </p>
+
+                <a href="catalogue.html" class="section-link">
+                    Discover Our Collection →
+                </a>
+            </div>
+
+            <div class="welcome-visual">
+                <div class="welcome-book-icon">📚</div>
+                <p class="visual-small">KNOWLEDGE IS POWER</p>
+                <h3>Every Book Opens a New Door</h3>
+                <p>
+                    Explore ideas that inspire you to think bigger
+                    and learn something new every day.
+                </p>
+            </div>
+        </section>
+        <!-- Categories -->
+        <section class="home-categories-section" id="categories">
+            <div class="section-heading">
+                <p class="section-kicker">FIND YOUR INTEREST</p>
+                <h2>Explore Our <span>Categories</span></h2>
+                <p>
+                    Choose a field, follow your curiosity, and keep learning.
+                </p>
+            </div>
+
+            <div class="home-categories-grid">
+
+                <a href="catalogue.html?category=programming"
+                   class="home-category-card">
+                    <span class="category-icon">💻</span>
+                    <h3>Programming</h3>
+                    <p>Code, algorithms, and software development.</p>
+                    <span class="category-arrow">Explore →</span>
+                </a>
+
+                <a href="catalogue.html?category=artificial-intelligence"
+                   class="home-category-card">
+                    <span class="category-icon">🧠</span>
+                    <h3>Artificial Intelligence</h3>
+                    <p>Machine learning, neural networks, and smart systems.</p>
+                    <span class="category-arrow">Explore →</span>
+                </a>
+
+                <a href="catalogue.html?category=design"
+                   class="home-category-card">
+                    <span class="category-icon">🎨</span>
+                    <h3>Design</h3>
+                    <p>Creativity, visual communication, and user experience.</p>
+                    <span class="category-arrow">Explore →</span>
+                </a>
+
+                <a href="catalogue.html?category=data-science"
+                   class="home-category-card">
+                    <span class="category-icon">📊</span>
+                    <h3>Data Science</h3>
+                    <p>Data analysis, statistics, and meaningful insights.</p>
+                    <span class="category-arrow">Explore →</span>
+                </a>
+
+                <a href="catalogue.html?category=business"
+                   class="home-category-card">
+                    <span class="category-icon">💼</span>
+                    <h3>Business</h3>
+                    <p>Entrepreneurship, management, and innovation.</p>
+                    <span class="category-arrow">Explore →</span>
+                </a>
+
+                <a href="catalogue.html?category=technology"
+                   class="home-category-card">
+                    <span class="category-icon">🌐</span>
+                    <h3>Technology</h3>
+                    <p>Discover modern technologies and digital ideas.</p>
+                    <span class="category-arrow">Explore →</span>
+                </a>
+
+            </div>
+        </section>
+        <!-- Call to Action -->
+        <section class="home-cta-section">
+            <div class="cta-content">
+                <p class="section-kicker">YOUR NEXT CHAPTER AWAITS</p>
+                <h2>Ready to Start Your <span>Reading Journey?</span></h2>
+                <p>
+                    Join Smart Library and begin exploring a world
+                    full of knowledge, inspiration, and new ideas.
+                </p>
+
+                <div class="hero-buttons cta-buttons">
+                    <a href="register.html" class="cta-main-btn">
+                        Get Started Today →
+                    </a>
+
+                    <a href="catalogue.html" class="cta-outline-btn">
+                        Browse Catalogue
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- Footer -->
+    <footer class="home-footer" id="footer">
+        <div class="footer-main">
+
+            <div class="footer-about">
+                <a href="home.html" class="footer-logo">
+                    📚 Smart Library
+                </a>
+
+                <p>
+                    Your gateway to knowledge, creativity, and lifelong
+                    learning. Discover books, explore ideas, and build
+                    your future one page at a time.
+                </p>
+
+                <div class="footer-motto">
+                    Read More. Discover More. Become More.
+                </div>
+            </div>
+
+            <div class="footer-column">
+                <h3>Explore</h3>
+                <a href="home.html">Home</a>
+                <a href="catalogue.html">All Books</a>
+                <a href="catalogue.html?category=programming">Programming</a>
+                <a href="catalogue.html?category=artificial-intelligence">
+                    Artificial Intelligence
+                </a>
+                <a href="catalogue.html?category=business">Business</a>
+            </div>
+
+            <div class="footer-column">
+                <h3>Your Account</h3>
+                <a href="login.html">Login</a>
+                <a href="register.html">Create Account</a>
+                <a href="#categories">Browse Categories</a>
+                <a href="#about">About Smart Library</a>
+            </div>
+
+            <div class="footer-column footer-contact">
+                <h3>Our Mission</h3>
+                <p>
+                    Making knowledge easier to explore and helping
+                    every reader find inspiration.
+                </p>
+                <a href="catalogue.html" class="footer-explore-btn">
+                    Start Exploring →
+                </a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2026 Smart Library. All rights reserved.</p>
+
+            <a href="#home">Back to Top ↑</a>
+        </div>
+    </footer>
+
+</body>
+</html>
+
