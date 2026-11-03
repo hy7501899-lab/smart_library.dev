@@ -1,18 +1,15 @@
-// Login and registration forms. Talks to the Flask API (see session.js).
+// Auth logic for Static GitHub Pages (Frontend-Only)
 
 const registerForm = document.getElementById("registerForm");
 const loginForm = document.getElementById("loginForm");
 
+// تسجيل حساب جديد وهمي
 if (registerForm) {
-    registerForm.addEventListener("submit", async function (event) {
+    registerForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
         const name = document.getElementById("fullName").value.trim();
-        const email = document.getElementById("registerEmail")
-            .value.trim().toLowerCase();
-        const password = document.getElementById("registerPassword").value;
-        const confirmPassword =
-            document.getElementById("confirmPassword").value;
+        const email = document.getElementById("registerEmail").value.trim().toLowerCase();
         const message = document.getElementById("registerMessage");
 
         if (!name || !email) {
@@ -20,73 +17,36 @@ if (registerForm) {
             return;
         }
 
-        if (password.length < 8) {
-            message.textContent =
-                "Password must contain at least 8 characters.";
-            return;
-        }
+        // حفظ بيانات المستخدم مؤقتاً في المتصفح
+        const dummyUser = { id: 1, name: name, email: email, phone: "" };
+        localStorage.setItem("smart_library_user", JSON.stringify(dummyUser));
+        localStorage.setItem("smart_library_token", "demo-token-123");
 
-        if (password !== confirmPassword) {
-            message.textContent = "Passwords do not match.";
-            return;
-        }
+        message.textContent = "Account created successfully! Redirecting...";
 
-        const submitButton = registerForm.querySelector("button[type=submit]");
-        submitButton.disabled = true;
-
-        try {
-            const data = await api("/api/auth/register", {
-                method: "POST",
-                body: { name, email, password }
-            });
-
-            // Registering also logs the user in.
-            saveSession(data.token, data.user);
-
-            message.textContent =
-                "Account created successfully! Redirecting to your dashboard...";
-
-            registerForm.reset();
-
-            setTimeout(() => {
-                window.location.href = "dashboard.html";
-            }, 1000);
-        } catch (error) {
-            message.textContent = error.message;
-            submitButton.disabled = false;
-        }
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 800);
     });
 }
 
+// تسجيل الدخول الوهمي
 if (loginForm) {
-    loginForm.addEventListener("submit", async function (event) {
+    loginForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const email = document.getElementById("loginEmail")
-            .value.trim().toLowerCase();
-        const password =
-            document.getElementById("loginPassword").value;
+        const email = document.getElementById("loginEmail").value.trim().toLowerCase();
         const message = document.getElementById("loginMessage");
 
-        const submitButton = loginForm.querySelector("button[type=submit]");
-        submitButton.disabled = true;
+        // حفظ بيانات جلسة دخول للمتصفح
+        const dummyUser = { id: 1, name: email.split("@")[0] || "User", email: email, phone: "" };
+        localStorage.setItem("smart_library_user", JSON.stringify(dummyUser));
+        localStorage.setItem("smart_library_token", "demo-token-123");
 
-        try {
-            const data = await api("/api/auth/login", {
-                method: "POST",
-                body: { email, password }
-            });
+        message.textContent = "Login successful!";
 
-            saveSession(data.token, data.user);
-
-            message.textContent = "Login successful!";
-
-            setTimeout(() => {
-                window.location.href = "home.html";
-            }, 700);
-        } catch (error) {
-            message.textContent = error.message;
-            submitButton.disabled = false;
-        }
+        setTimeout(() => {
+            window.location.href = "home.html";
+        }, 700);
     });
 }
