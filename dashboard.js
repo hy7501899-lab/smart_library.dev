@@ -4,7 +4,7 @@
 
 "use strict";
 
-// التحقق من أن المستخدم مسجل دخول
+// التحقق من تسجيل الدخول
 if (typeof isLoggedIn === "function" && !isLoggedIn()) {
     window.location.replace("login.html");
 }
@@ -18,7 +18,14 @@ function escapeHTML(value) {
             '"': "&quot;",
             "'": "&#39;"
         };
-        return entities[character];
+        return entities[character] || character;
+    });
+}
+
+function formatMoney(value) {
+    return (Number(value) || 0).toLocaleString("en-US", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
     });
 }
 
@@ -26,8 +33,11 @@ let myBooks = [];
 let favorites = [];
 
 // ========================================
-// 1. ACCOUNT INFORMATION (Real User Data)
+// 1. ACCOUNT INFORMATION (Local Storage)
 // ========================================
+
+const accountForm = document.getElementById("accountForm");
+const accountMessage = document.getElementById("accountMessage");
 
 function fillAccount(account) {
     const nameInput = document.getElementById("userName");
@@ -40,13 +50,9 @@ function fillAccount(account) {
 }
 
 function loadAccount() {
-    // جلب بيانات الشخص الفعلي المسجل حالياً
-    const currentUser = typeof getUser === "function" ? getUser() : JSON.parse(localStorage.getItem("smart_library_user") || "{}");
-    fillAccount(currentUser);
+    const user = typeof getUser === "function" ? getUser() : JSON.parse(localStorage.getItem("smart_library_user") || "{}");
+    fillAccount(user);
 }
-
-const accountForm = document.getElementById("accountForm");
-const accountMessage = document.getElementById("accountMessage");
 
 if (accountForm) {
     accountForm.addEventListener("submit", function (event) {
