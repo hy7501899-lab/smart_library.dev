@@ -1,66 +1,95 @@
+// ========================================
+// SMART LIBRARY - AUTHENTICATION LOGIC
+// ========================================
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register | Smart Library</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="session.js" defer></script>
-    <script src="auth.js" defer></script>
-    <script src="chatbot.js" defer></script>
-</head>
-<body class="auth-page">
+"use strict";
 
-<header class="navbar inner-navbar">
-    <a href="home.html" class="logo">📚 Smart Library</a>
-    <nav>
-        <a href="home.html">Home</a>
-        <a href="catalogue.html">Catalogue</a>
-        <a href="login.html">Login</a>
-    </nav>
-</header>
+const registerForm = document.getElementById("registerForm");
+const loginForm = document.getElementById("loginForm");
 
-<main class="auth-layout">
-    <section class="auth-card">
-        <div class="auth-icon">📚</div>
-        <p class="subtitle">START YOUR JOURNEY</p>
-        <h1>Create Account</h1>
-        <p class="auth-description">
-            Join our community and discover your next favorite book.
-        </p>
+// 1. تسجيل حساب جديد
+if (registerForm) {
+    registerForm.addEventListener("submit", function (event) {
+        event.preventDefault();
 
-        <form id="registerForm">
-            <label for="fullName">Full Name</label>
-            <input id="fullName" type="text"
-                   placeholder="Enter your full name" required>
+        const nameInput = document.getElementById("fullName");
+        const emailInput = document.getElementById("registerEmail");
+        const passwordInput = document.getElementById("registerPassword");
+        const confirmInput = document.getElementById("confirmPassword");
+        const message = document.getElementById("registerMessage");
 
-            <label for="registerEmail">Email Address</label>
-            <input id="registerEmail" type="email"
-                   placeholder="you@example.com" required>
+        const name = nameInput ? nameInput.value.trim() : "";
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+        const password = passwordInput ? passwordInput.value : "";
+        const confirmPassword = confirmInput ? confirmInput.value : "";
 
-            <label for="registerPassword">Password</label>
-            <input id="registerPassword" type="password"
-                   placeholder="At least 8 characters" minlength="8" required>
+        if (!name || !email || !password) {
+            if (message) message.textContent = "Please fill in all required fields.";
+            return;
+        }
 
-            <label for="confirmPassword">Confirm Password</label>
-            <input id="confirmPassword" type="password"
-                   placeholder="Repeat your password" minlength="8" required>
+        if (password !== confirmPassword) {
+            if (message) {
+                message.style.color = "red";
+                message.textContent = "Passwords do not match!";
+            }
+            return;
+        }
 
-            <button type="submit" class="auth-submit">
-                Create Account
-            </button>
+        // حفظ بيانات المستخدم الحقيقية في الذاكرة المحلية للمتصفح
+        const newUser = {
+            id: Date.now(),
+            name: name,
+            email: email,
+            phone: ""
+        };
 
-            <p id="registerMessage" class="form-message"
-               aria-live="polite"></p>
-        </form>
+        localStorage.setItem("smart_library_token", "token-" + Date.now());
+        localStorage.setItem("smart_library_user", JSON.stringify(newUser));
 
-        <p class="auth-switch">
-            Already have an account?
-            <a href="login.html">Login</a>
-        </p>
-    </section>
-</main>
+        if (message) {
+            message.style.color = "green";
+            message.textContent = "Account created successfully! Redirecting to dashboard...";
+        }
 
-</body>
-</html>
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 900);
+    });
+}
+
+// 2. تسجيل الدخول
+if (loginForm) {
+    loginForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const emailInput = document.getElementById("loginEmail");
+        const message = document.getElementById("loginMessage");
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : "yara@example.com";
+
+        // استخراج اسم مقترح من الإيميل إذا لم يكن مسجلاً مسبقاً
+        const username = email.split("@")[0];
+        const formattedName = username.charAt(0).toUpperCase() + username.slice(1);
+
+        const existingUser = JSON.parse(localStorage.getItem("smart_library_user")) || {};
+        
+        const loggedUser = {
+            id: existingUser.id || Date.now(),
+            name: existingUser.name || formattedName,
+            email: email,
+            phone: existingUser.phone || ""
+        };
+
+        localStorage.setItem("smart_library_token", "token-" + Date.now());
+        localStorage.setItem("smart_library_user", JSON.stringify(loggedUser));
+
+        if (message) {
+            message.style.color = "green";
+            message.textContent = "Login successful! Redirecting...";
+        }
+
+        setTimeout(() => {
+            window.location.href = "dashboard.html";
+        }, 800);
+    });
+}
