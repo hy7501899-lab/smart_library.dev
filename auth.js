@@ -3,26 +3,32 @@
 const registerForm = document.getElementById("registerForm");
 const loginForm = document.getElementById("loginForm");
 
-// تسجيل حساب جديد وهمي
+// 1. تسجيل حساب جديد
 if (registerForm) {
     registerForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const name = document.getElementById("fullName").value.trim();
-        const email = document.getElementById("registerEmail").value.trim().toLowerCase();
+        const nameInput = document.getElementById("fullName");
+        const emailInput = document.getElementById("registerEmail");
         const message = document.getElementById("registerMessage");
 
+        const name = nameInput ? nameInput.value.trim() : "";
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
+
         if (!name || !email) {
-            message.textContent = "Please complete all fields.";
+            if (message) message.textContent = "Please complete all fields.";
             return;
         }
 
-        // حفظ بيانات المستخدم مؤقتاً في المتصفح
-        const dummyUser = { id: 1, name: name, email: email, phone: "" };
-        localStorage.setItem("smart_library_user", JSON.stringify(dummyUser));
-        localStorage.setItem("smart_library_token", "demo-token-123");
+        // حفظ بيانات المستخدم الحقيقية في المتصفح
+        const realUser = { id: Date.now(), name: name, email: email, phone: "" };
+        localStorage.setItem("smart_library_user", JSON.stringify(realUser));
+        localStorage.setItem("smart_library_token", "demo-token-" + Date.now());
 
-        message.textContent = "Account created successfully! Redirecting...";
+        if (message) {
+            message.style.color = "green";
+            message.textContent = "Account created successfully! Redirecting...";
+        }
 
         setTimeout(() => {
             window.location.href = "dashboard.html";
@@ -30,23 +36,37 @@ if (registerForm) {
     });
 }
 
-// تسجيل الدخول الوهمي
+// 2. تسجيل الدخول
 if (loginForm) {
     loginForm.addEventListener("submit", function (event) {
         event.preventDefault();
 
-        const email = document.getElementById("loginEmail").value.trim().toLowerCase();
+        const emailInput = document.getElementById("loginEmail");
         const message = document.getElementById("loginMessage");
+        const email = emailInput ? emailInput.value.trim().toLowerCase() : "";
 
-        // حفظ بيانات جلسة دخول للمتصفح
-        const dummyUser = { id: 1, name: email.split("@")[0] || "User", email: email, phone: "" };
-        localStorage.setItem("smart_library_user", JSON.stringify(dummyUser));
-        localStorage.setItem("smart_library_token", "demo-token-123");
+        if (!email) {
+            if (message) message.textContent = "Please enter your email.";
+            return;
+        }
 
-        message.textContent = "Login successful!";
+        // استخراج اسم ذكي من الإيميل إذا لم يكن موجوداً مسبقاً
+        const username = email.split("@")[0] || "User";
+        const formattedName = username.charAt(0).toUpperCase() + username.slice(1);
 
+        const userSession = { id: Date.now(), name: formattedName, email: email, phone: "" };
+        
+        localStorage.setItem("smart_library_user", JSON.stringify(userSession));
+        localStorage.setItem("smart_library_token", "demo-token-" + Date.now());
+
+        if (message) {
+            message.style.color = "green";
+            message.textContent = "Login successful! Redirecting to dashboard...";
+        }
+
+        // التوجيه المباشر للداشبورد لعرض بيانات المستخدم
         setTimeout(() => {
-            window.location.href = "home.html";
+            window.location.href = "dashboard.html";
         }, 700);
     });
 }
