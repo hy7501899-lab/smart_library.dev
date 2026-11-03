@@ -1,64 +1,56 @@
-// ========================================
-// SMART LIBRARY - SESSION & API HELPER (Static Version)
-// ========================================
+// Smart Library - Frontend Session & API Helper
 
-// 1. جلب التوكين المحفوظ
 function getToken() {
     return localStorage.getItem("smart_library_token");
 }
 
-// 2. جلب بيانات المستخدم بأمان بدون أخطاء (الوقاية من خطأ reading 'name')
 function getUser() {
     try {
-        const item = localStorage.getItem("smart_library_user");
-        if (!item || item === "undefined" || item === "null") {
-            return { id: 1, name: "Yara", email: "yara@example.com", phone: "" };
-        }
-        return JSON.parse(item);
-    } catch (e) {
-        return { id: 1, name: "Yara", email: "yara@example.com", phone: "" };
+        return JSON.parse(localStorage.getItem("smart_library_user"));
+    } catch {
+        return null;
     }
 }
 
-// 3. التحقق من حالة تسجيل الدخول
 function isLoggedIn() {
     return Boolean(getToken() && getUser());
 }
 
-// 4. حفظ بيانات الجلسة محلياً
 function saveSession(token, user) {
     localStorage.setItem("smart_library_token", token);
     localStorage.setItem("smart_library_user", JSON.stringify(user));
 }
 
-// 5. مسح بيانات الجلسة (تسجيل الخروج)
 function clearSession() {
     localStorage.removeItem("smart_library_token");
     localStorage.removeItem("smart_library_user");
 }
 
-// 6. دالة api وهمية لتوافق الصفحات التي تطلب طلبات شبكة
+// دالة api الوهمية لتتوافق مع صفحات الواجهة الثابتة بدون سيرفر
 async function api(endpoint, options = {}) {
-    const user = getUser();
+    // محاكاة طلبات الـ API محلياً في المتصفح
     if (endpoint.includes("/api/auth/login") || endpoint.includes("/api/auth/register")) {
-        return { token: "demo-token-123", user: user };
+        return {
+            token: "demo-token-123",
+            user: { id: 1, name: "Yara", email: "yara@example.com", phone: "" }
+        };
     }
-    if (endpoint.includes("/api/me")) {
-        return user;
-    }
-    if (endpoint.includes("/api/books") || endpoint.includes("/api/me/books")) {
+    if (endpoint.includes("/api/me/books")) {
         return { books: [] };
     }
     if (endpoint.includes("/api/me/favorites")) {
-        return { favorites: [] };
+        return { books: [] };
     }
     if (endpoint.includes("/api/me/payments")) {
         return { payments: [] };
     }
+    if (endpoint.includes("/api/books")) {
+        return { books: [] };
+    }
     return { ok: true };
 }
 
-// 7. تحديث عناصر الـ Navbar تلقائياً بناءً على الجلسة
+// تحديث روابط الـ Navbar بناءً على حالة تسجيل الدخول
 document.addEventListener("DOMContentLoaded", () => {
     const authLink = document.getElementById("authLink");
     const registerLink = document.getElementById("registerLink");
