@@ -1,141 +1,140 @@
-// ========================================
-// SMART LIBRARY - DASHBOARD JAVASCRIPT (Static GitHub Pages Version)
-// ========================================
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Library | Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="session.js" defer></script>
+    <script src="dashboard.js" defer></script>
+</head>
+<body>
 
-"use strict";
+<header class="dashboard-navbar">
+    <a href="home.html" class="brand">📚 Smart Library</a>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="catalogue.html">Catalogue</a>
+        <a href="dashboard.html" class="active">Dashboard</a>
+        <a href="login.html" id="logoutLink">Logout</a>
+    </nav>
+</header>
 
-if (!isLoggedIn()) {
-    window.location.replace("login.html");
-}
+<main class="dashboard-container">
+    <section class="welcome-section">
+        <div>
+            <p class="eyebrow">YOUR PERSONAL LIBRARY</p>
+            <h1>My Dashboard</h1>
+            <p>Manage your account, books, favorites, and payments in one place.</p>
+        </div>
+        <a href="catalogue.html" class="main-button">Explore Books →</a>
+    </section>
 
-function escapeHTML(value) {
-    return String(value ?? "").replace(/[&<>"']/g, character => {
-        const entities = {
-            "&": "&amp;",
-            "<": "&lt;",
-            ">": "&gt;",
-            '"': "&quot;",
-            "'": "&#39;"
-        };
-        return entities[character];
-    });
-}
-
-function formatMoney(value) {
-    return (Number(value) || 0).toLocaleString("en-US", {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    });
-}
-
-let myBooks = [];
-let favorites = [];
-
-// ========================================
-// 1. ACCOUNT INFORMATION (Local Storage)
-// ========================================
-
-const accountForm = document.getElementById("accountForm");
-const accountMessage = document.getElementById("accountMessage");
-
-function fillAccount(account) {
-    document.getElementById("userName").value = account.name || "";
-    document.getElementById("userEmail").value = account.email || "";
-    document.getElementById("userPhone").value = account.phone || "";
-}
-
-function loadAccount() {
-    const user = getUser() || { name: "Yara", email: "yara@example.com", phone: "" };
-    fillAccount(user);
-}
-
-if (accountForm) {
-    accountForm.addEventListener("submit", function (event) {
-        event.preventDefault();
-
-        const name = document.getElementById("userName").value.trim();
-        const email = document.getElementById("userEmail").value.trim();
-        const phone = document.getElementById("userPhone").value.trim();
-
-        if (!name || !email) {
-            accountMessage.textContent = "Please enter your name and email.";
-            return;
-        }
-
-        const updatedUser = { id: 1, name, email, phone };
-        saveSession(getToken(), updatedUser);
-        fillAccount(updatedUser);
-
-        accountMessage.style.color = "green";
-        accountMessage.textContent = "Account information saved successfully!";
-    });
-}
-
-// ========================================
-// 2. BOOK LISTS & PAYMENTS
-// ========================================
-
-function renderMyBooks() {
-    const booksList = document.getElementById("myBooksList");
-    const booksCount = document.getElementById("booksCount");
-
-    booksCount.textContent = myBooks.length;
-
-    if (myBooks.length === 0) {
-        booksList.innerHTML = `<p class="empty-message">You haven't added any books yet.</p>`;
-        return;
-    }
-
-    booksList.innerHTML = myBooks.map(book => `
-        <article class="book-item">
-            <div class="book-cover" style="background:${escapeHTML(book.color || '#2563eb')}">
-                ${escapeHTML(book.icon || '📚')}
-            </div>
-            <div class="book-info">
-                <h3>${escapeHTML(book.title)}</h3>
-                <p>${escapeHTML(book.author)} - ${escapeHTML(book.category)}</p>
+    <section class="stats-grid">
+        <article class="stat-card">
+            <div class="stat-icon purple">📚</div>
+            <div>
+                <p>My Books</p>
+                <h2 id="booksCount">0</h2>
             </div>
         </article>
-    `).join("");
-}
-
-function renderFavorites() {
-    const favoritesList = document.getElementById("favoritesList");
-    const favoritesCount = document.getElementById("favoritesCount");
-
-    favoritesCount.textContent = favorites.length;
-
-    if (favorites.length === 0) {
-        favoritesList.innerHTML = `<p class="empty-message">You haven't added any favorite books yet.</p>`;
-        return;
-    }
-
-    favoritesList.innerHTML = favorites.map(book => `
-        <article class="book-item">
-            <div class="book-cover" style="background:${escapeHTML(book.color || '#2563eb')}">
-                ${escapeHTML(book.icon || '♥')}
-            </div>
-            <div class="book-info">
-                <h3>${escapeHTML(book.title)}</h3>
-                <p>${escapeHTML(book.author)} - ${escapeHTML(book.category)}</p>
+        <article class="stat-card">
+            <div class="stat-icon pink">♥</div>
+            <div>
+                <p>Favorites</p>
+                <h2 id="favoritesCount">0</h2>
             </div>
         </article>
-    `).join("");
-}
+        <article class="stat-card">
+            <div class="stat-icon blue">💳</div>
+            <div>
+                <p>Payments</p>
+                <h2 id="paymentsCount">0</h2>
+            </div>
+        </article>
+        <article class="stat-card">
+            <div class="stat-icon green">✓</div>
+            <div>
+                <p>Completed Payments</p>
+                <h2 id="completedCount">0</h2>
+            </div>
+        </article>
+    </section>
 
-function renderPayments() {
-    const paymentsList = document.getElementById("paymentsList");
-    document.getElementById("paymentsCount").textContent = "0";
-    document.getElementById("completedCount").textContent = "0";
-    document.getElementById("totalPayments").textContent = "0.00 EGP";
-    
-    paymentsList.innerHTML = `<p class="empty-message">You haven't made any payments yet.</p>`;
-}
+    <section class="dashboard-grid">
+        <!-- Personal Information Panel -->
+        <article class="panel account-panel" id="account">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">PERSONAL INFORMATION</p>
+                    <h2>My Account</h2>
+                </div>
+                <span class="heading-icon">👤</span>
+            </div>
+            <form id="accountForm">
+                <label for="userName">Full Name</label>
+                <input id="userName" type="text" placeholder="Enter your name" required>
 
-document.addEventListener("DOMContentLoaded", function () {
-    if (!isLoggedIn()) return;
-    loadAccount();
-    renderMyBooks();
-    renderFavorites();
-    renderPayments();
-});
+                <label for="userEmail">Email Address</label>
+                <input id="userEmail" type="email" placeholder="Enter your email" required>
+
+                <label for="userPhone">Phone Number</label>
+                <input id="userPhone" type="tel" placeholder="Enter your phone number">
+
+                <button type="submit" class="main-button full-button">Save Changes</button>
+                <p id="accountMessage" class="message" aria-live="polite"></p>
+            </form>
+        </article>
+
+        <!-- My Books Panel -->
+        <article class="panel" id="my-books">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">YOUR COLLECTION</p>
+                    <h2>My Books</h2>
+                </div>
+                <a href="catalogue.html" class="small-link">Browse Books →</a>
+            </div>
+            <div id="myBooksList" class="book-list"></div>
+        </article>
+
+        <!-- Favorites Panel -->
+        <article class="panel" id="favorites">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">SAVED FOR LATER</p>
+                    <h2>Favorite List</h2>
+                </div>
+                <span class="heading-icon">♥</span>
+            </div>
+            <div id="favoritesList" class="book-list"></div>
+        </article>
+
+        <!-- Payments Panel -->
+        <article class="panel" id="payments">
+            <div class="panel-heading">
+                <div>
+                    <p class="eyebrow">PAYMENT HISTORY</p>
+                    <h2>My Payments</h2>
+                </div>
+                <span class="heading-icon">💳</span>
+            </div>
+            <div class="payment-summary">
+                <span>Total recorded payments</span>
+                <strong id="totalPayments">0.00 EGP</strong>
+            </div>
+            <div id="paymentsList" class="payments-list"></div>
+            <p class="note">
+                This section displays saved payment records only. It does not process real payments.
+            </p>
+        </article>
+    </section>
+
+    <footer class="dashboard-footer">
+        <a href="home.html">← Back to Home</a>
+        <p>© 2026 Smart Library. Learn something new every day.</p>
+    </footer>
+</main>
+
+</body>
+</html>
