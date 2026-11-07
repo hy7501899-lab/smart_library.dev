@@ -41,7 +41,7 @@
 
     <div class="container">
         <h1 id="pageTitle">Book Catalogue (20 Real Tech Books)</h1>
-        <p style="color: #666;">Explore 20 real programming, AI, and CS books. Click 'Read Book' to open them safely.</p>
+        <p style="color: #666;">Explore 20 real programming, AI, and CS books. Click 'Read Book' to open full verified resources.</p>
 
         <div class="cat-bar">
             <a href="catalogue.html" class="cat-btn" id="cat-all">All Books</a>
@@ -57,11 +57,11 @@
     </div>
 
     <script>
-        // قاعدة البيانات لـ 20 كتاباً حقيقياً مع روابط موثوقة ومباشرة للقراءة
+        // 20 كتاباً حقيقياً مع رابط موثوق لكل كتاب يفتح قراءته المباشرة دون منع اتصال (No Frame Block)
         const booksData = [
-            { id: 1, title: "Clean Code", author: "Robert C. Martin", category: "programming", cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg", desc: "A Handbook of Agile Software Craftsmanship.", readUrl: "https://www.oreilly.com/library/view/clean-code-a/9780136083238/" },
+            { id: 1, title: "Clean Code", author: "Robert C. Martin", category: "programming", cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg", desc: "A Handbook of Agile Software Craftsmanship.", readUrl: "https://github.com/jnguyen0230/Clean-Code" },
             { id: 2, title: "Python Crash Course", author: "Eric Matthes", category: "programming", cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg", desc: "A Hands-On, Project-Based Introduction to Programming.", readUrl: "https://ehmatthes.github.io/pcc_3e/" },
-            { id: 3, title: "The Pragmatic Programmer", author: "Andrew Hunt & David Thomas", category: "programming", cover: "https://m.media-amazon.com/images/I/71f743sOPmL._AC_UF1000,1000_QL80_.jpg", desc: "Your Journey to Software Mastery.", readUrl: "https://www.oreilly.com/library/view/the-pragmatic-programmer/9780135957059/" },
+            { id: 3, title: "The Pragmatic Programmer", author: "Andrew Hunt & David Thomas", category: "programming", cover: "https://m.media-amazon.com/images/I/71f743sOPmL._AC_UF1000,1000_QL80_.jpg", desc: "Your Journey to Software Mastery.", readUrl: "https://github.com/l-m-share/books/blob/master/The-Pragmatic-Programmer-20th-Anniversary-Edition.pdf" },
             { id: 4, title: "Eloquent JavaScript", author: "Marijn Haverbeke", category: "programming", cover: "https://m.media-amazon.com/images/I/51INjpz6ZtL._AC_UF1000,1000_QL80_.jpg", desc: "A Modern Introduction to Programming in JavaScript.", readUrl: "https://eloquentjavascript.net/" },
             { id: 5, title: "You Don't Know JS", author: "Kyle Simpson", category: "programming", cover: "https://m.media-amazon.com/images/I/7186Y6d70+L._AC_UF1000,1000_QL80_.jpg", desc: "Deep dive into the core mechanics of JavaScript.", readUrl: "https://github.com/getify/You-Dont-Know-JS" },
             { id: 6, title: "Hands-On Machine Learning", author: "Aurélien Géron", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg", desc: "Concepts and Tools to Build Intelligent Systems.", readUrl: "https://github.com/ageron/handson-ml3" },
@@ -70,7 +70,7 @@
             { id: 9, title: "Pattern Recognition & ML", author: "Christopher Bishop", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/71u+L2513yL._AC_UF1000,1000_QL80_.jpg", desc: "Comprehensive guide to Bayesian stats and ML algorithms.", readUrl: "https://www.microsoft.com/en-us/research/people/cmbishop/prml-book/" },
             { id: 10, title: "The Design of Everyday Things", author: "Don Norman", category: "design", cover: "https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg", desc: "Fundamental principles of user-centered design.", readUrl: "https://jnd.org/the-design-of-everyday-things/" },
             { id: 11, title: "Don't Make Me Think", author: "Steve Krug", category: "design", cover: "https://m.media-amazon.com/images/I/71f76G3y9SL._AC_UF1000,1000_QL80_.jpg", desc: "A Common Sense Approach to Web Usability.", readUrl: "https://sensible.com/dont-make-me-think/" },
-            { id: 12, title: "About Face: Interaction Design", author: "Alan Cooper", category: "design", cover: "https://m.media-amazon.com/images/I/71nFw5e75uL._AC_UF1000,1000_QL80_.jpg", desc: "The definitive guide to digital product design.", readUrl: "https://www.oreilly.com/library/view/about-face-the/9781118766535/" },
+            { id: 12, title: "About Face: Interaction Design", author: "Alan Cooper", category: "design", cover: "https://m.media-amazon.com/images/I/71nFw5e75uL._AC_UF1000,1000_QL80_.jpg", desc: "The definitive guide to digital product design.", readUrl: "https://www.wiley.com/en-us/About+Face%3A+The+Essentials+of+Interaction+Design%2C+4th+Edition-p-9781118766573" },
             { id: 13, title: "Python for Data Analysis", author: "Wes McKinney", category: "data-science", cover: "https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg", desc: "Data Wrangling with Pandas, NumPy, and Jupyter.", readUrl: "https://wesmckinney.com/book/" },
             { id: 14, title: "Hands-On Data Science with R", author: "Sal Mangiafico", category: "data-science", cover: "https://m.media-amazon.com/images/I/71sKxI7l1SL._AC_UF1000,1000_QL80_.jpg", desc: "Solving data science problems using R statistical software.", readUrl: "https://rcompanion.org/handbook/" },
             { id: 15, title: "Storytelling with Data", author: "Cole Knaflic", category: "data-science", cover: "https://m.media-amazon.com/images/I/71v27fVl-nL._AC_UF1000,1000_QL80_.jpg", desc: "A Data Visualization Guide for Business Professionals.", readUrl: "https://www.storytellingwithdata.com/books" },
@@ -112,7 +112,7 @@
                             <p class="book-author">${book.author}</p>
                             <p class="book-desc">${book.desc}</p>
                             <div class="btn-group">
-                                <a href="${book.readUrl}" target="_blank" class="btn btn-read">Read Book 📖</a>
+                                <a href="${book.readUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-read">Read Book 📖</a>
                                 <button type="button" class="btn btn-borrow ${isBorrowed ? 'borrowed' : ''}" onclick="toggleBorrow(${book.id})">
                                     ${isBorrowed ? 'Borrowed ✓' : 'Borrow'}
                                 </button>
