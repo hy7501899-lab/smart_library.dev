@@ -105,68 +105,94 @@
     </nav>
 
     <div class="container">
-        <h1>Book Catalogue</h1>
+        <h1 id="pageTitle">Book Catalogue</h1>
         <p style="color: #666;">Explore our library collection and start reading today.</p>
 
         <!-- شبكة الكتب -->
         <div class="books-grid" id="booksGrid">
-            <!-- كتاب 1 -->
-            <div class="book-card">
-                <img src="https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg" class="book-cover" alt="Clean Code">
-                <div class="book-info">
-                    <h3 class="book-title">Clean Code</h3>
-                    <p class="book-author">Robert C. Martin</p>
-                    <p class="book-desc">A Handbook of Agile Software Craftsmanship.</p>
-                    <div class="btn-group">
-                        <button class="btn btn-read" onclick="alert('Opening Clean Code chapter...')">Read</button>
-                        <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- كتاب 2 -->
-            <div class="book-card">
-                <img src="https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg" class="book-cover" alt="Python Crash Course">
-                <div class="book-info">
-                    <h3 class="book-title">Python Crash Course</h3>
-                    <p class="book-author">Eric Matthes</p>
-                    <p class="book-desc">A Hands-On, Project-Based Introduction to Programming.</p>
-                    <div class="btn-group">
-                        <button class="btn btn-read" onclick="alert('Opening Python Crash Course...')">Read</button>
-                        <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- كتاب 3 -->
-            <div class="book-card">
-                <img src="https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg" class="book-cover" alt="Machine Learning">
-                <div class="book-info">
-                    <h3 class="book-title">Hands-On Machine Learning</h3>
-                    <p class="book-author">Aurélien Géron</p>
-                    <p class="book-desc">Concepts, Tools, and Techniques to Build Intelligent Systems.</p>
-                    <div class="btn-group">
-                        <button class="btn btn-read" onclick="alert('Opening Machine Learning book...')">Read</button>
-                        <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- كتاب 4 -->
-            <div class="book-card">
-                <img src="https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg" class="book-cover" alt="The Design of Everyday Things">
-                <div class="book-info">
-                    <h3 class="book-title">The Design of Everyday Things</h3>
-                    <p class="book-author">Don Norman</p>
-                    <p class="book-desc">Fundamental principles of intuitive and user-centered design.</p>
-                    <div class="btn-group">
-                        <button class="btn btn-read" onclick="alert('Opening Design book...')">Read</button>
-                        <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
-                    </div>
-                </div>
-            </div>
+            <!-- سيتم تعبئة الكتب تلقائياً بواسطة الكود أدناه -->
         </div>
     </div>
 
+    <script>
+        // قاعدة بيانات الكتب مع تحديد التصنيف (Category) لكل كتاب
+        const booksData = [
+            {
+                title: "Clean Code",
+                author: "Robert C. Martin",
+                category: "programming",
+                cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg",
+                desc: "A Handbook of Agile Software Craftsmanship."
+            },
+            {
+                title: "Python Crash Course",
+                author: "Eric Matthes",
+                category: "programming",
+                cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg",
+                desc: "A Hands-On, Project-Based Introduction to Programming."
+            },
+            {
+                title: "Hands-On Machine Learning",
+                author: "Aurélien Géron",
+                category: "artificial-intelligence",
+                cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg",
+                desc: "Concepts, Tools, and Techniques to Build Intelligent Systems."
+            },
+            {
+                title: "The Design of Everyday Things",
+                author: "Don Norman",
+                category: "design",
+                cover: "https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg",
+                desc: "Fundamental principles of intuitive and user-centered design."
+            },
+            {
+                title: "Python for Data Analysis",
+                author: "Wes McKinney",
+                category: "data-science",
+                cover: "https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg",
+                desc: "Data Wrangling with Pandas, NumPy, and Jupyter."
+            },
+            {
+                title: "The Lean Startup",
+                author: "Eric Ries",
+                category: "business",
+                cover: "https://m.media-amazon.com/images/I/81vvgZqCskL._AC_UF1000,1000_QL80_.jpg",
+                desc: "How Constant Innovation Creates Radically Successful Businesses."
+            }
+        ];
+
+        // قراءة التصنيف من الرابط (URL)
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+
+        const grid = document.getElementById('booksGrid');
+        
+        // تصفية الكتب حسب الرابط (لو فيه category) أو عرض الكل
+        let displayedBooks = booksData;
+        if (categoryParam) {
+            displayedBooks = booksData.filter(b => b.category === categoryParam);
+            document.getElementById('pageTitle').innerText = "Catalogue: " + categoryParam.toUpperCase();
+        }
+
+        // عرض الكتب في الصفحة
+        if (displayedBooks.length === 0) {
+            grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; font-size: 1.1rem;">No books found in this category.</p>`;
+        } else {
+            grid.innerHTML = displayedBooks.map(book => `
+                <div class="book-card">
+                    <img src="${book.cover}" class="book-cover" alt="${book.title}">
+                    <div class="book-info">
+                        <h3 class="book-title">${book.title}</h3>
+                        <p class="book-author">${book.author}</p>
+                        <p class="book-desc">${book.desc}</p>
+                        <div class="btn-group">
+                            <button class="btn btn-read" onclick="alert('Opening ${book.title}...')">Read</button>
+                            <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
 </body>
 </html>
