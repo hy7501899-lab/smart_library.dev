@@ -22,18 +22,11 @@
         .book-author { font-size: 0.85rem; color: #e67e22; font-weight: bold; margin-bottom: 8px; }
         .book-desc { font-size: 0.85rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
         .btn-group { display: flex; gap: 10px; }
-        .btn { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; text-align: center; font-size: 0.9rem; }
+        .btn { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; text-align: center; font-size: 0.9rem; text-decoration: none; display: flex; align-items: center; justify-content: center; }
         .btn-read { background: #211536; }
         .btn-read:hover { background: #3b275c; }
         .btn-borrow { background: #e67e22; }
         .btn-borrow.borrowed { background: #27ae60; }
-
-        /* In-Page Reader Modal (القارئ المدمج داخل الموقع) */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); justify-content: center; align-items: center; z-index: 9999; }
-        .modal-card { background: white; width: 95%; max-width: 950px; height: 90vh; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .close-btn { position: absolute; top: 10px; right: 20px; font-size: 2.2rem; cursor: pointer; color: #888; z-index: 10; }
-        .close-btn:hover { color: #000; }
-        .book-frame { width: 100%; height: 100%; border: 1px solid #ddd; border-radius: 8px; margin-top: 15px; }
     </style>
 </head>
 <body>
@@ -48,7 +41,7 @@
 
     <div class="container">
         <h1 id="pageTitle">Book Catalogue (20 Real Tech Books)</h1>
-        <p style="color: #666;">Explore 20 real tech books. Click 'Read Book' to read them directly inside the website.</p>
+        <p style="color: #666;">Explore 20 real programming, AI, and CS books. Click 'Read Book' to open full verified resources.</p>
 
         <div class="cat-bar">
             <a href="catalogue.html" class="cat-btn" id="cat-all">All Books</a>
@@ -63,43 +56,29 @@
         <div class="books-grid" id="booksGrid"></div>
     </div>
 
-    <!-- النافذة المنبثقة للقارئ المدمج بالكامل داخل الموقع -->
-    <div class="modal-overlay" id="readerModal">
-        <div class="modal-card">
-            <span class="close-btn" onclick="closeReader()">&times;</span>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 40px;">
-                <div>
-                    <h2 id="modalTitle" style="color: #211536; margin-bottom: 2px;"></h2>
-                    <h5 id="modalAuthor" style="color: #e67e22;"></h5>
-                </div>
-            </div>
-            <iframe class="book-frame" id="bookFrame" src="" allowfullscreen webkitallowfullscreen mozallowfullscreen></iframe>
-        </div>
-    </div>
-
     <script>
-        // 20 كتاباً حقيقياً مع روابط Embed مخصصة للعرض داخل الموقع دون حظر
+        // 20 كتاباً حقيقياً مع رابط موثوق لكل كتاب يفتح قراءته المباشرة دون منع اتصال (No Frame Block)
         const booksData = [
-            { id: 1, title: "Clean Code", author: "Robert C. Martin", category: "programming", cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg", desc: "A Handbook of Agile Software Craftsmanship.", embedUrl: "https://archive.org/embed/CleanCodeAHandbookOfAgileSoftwareCraftsmanship" },
-            { id: 2, title: "Python Crash Course", author: "Eric Matthes", category: "programming", cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg", desc: "A Hands-On, Project-Based Introduction to Programming.", embedUrl: "https://ehmatthes.github.io/pcc_3e/" },
-            { id: 3, title: "The Pragmatic Programmer", author: "Andrew Hunt & David Thomas", category: "programming", cover: "https://m.media-amazon.com/images/I/71f743sOPmL._AC_UF1000,1000_QL80_.jpg", desc: "Your Journey to Software Mastery.", embedUrl: "https://archive.org/embed/pragmaticprogrammer" },
-            { id: 4, title: "Eloquent JavaScript", author: "Marijn Haverbeke", category: "programming", cover: "https://m.media-amazon.com/images/I/51INjpz6ZtL._AC_UF1000,1000_QL80_.jpg", desc: "A Modern Introduction to Programming in JavaScript.", embedUrl: "https://eloquentjavascript.net/" },
-            { id: 5, title: "You Don't Know JS", author: "Kyle Simpson", category: "programming", cover: "https://m.media-amazon.com/images/I/7186Y6d70+L._AC_UF1000,1000_QL80_.jpg", desc: "Deep dive into the core mechanics of JavaScript.", embedUrl: "https://github.com/getify/You-Dont-Know-JS" },
-            { id: 6, title: "Hands-On Machine Learning", author: "Aurélien Géron", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg", desc: "Concepts and Tools to Build Intelligent Systems.", embedUrl: "https://archive.org/embed/hands-on-machine-learning-with-scikit-learn-keras-and-tensorflow-2nd-edition" },
-            { id: 7, title: "Deep Learning Textbook", author: "Ian Goodfellow", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/61ScEipC3-L._AC_UF1000,1000_QL80_.jpg", desc: "An MIT Press foundational textbook on Deep Neural Nets.", embedUrl: "https://www.deeplearningbook.org/" },
-            { id: 8, title: "Artificial Intelligence: Modern Approach", author: "Stuart Russell & Peter Norvig", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/81m9B-40jpL._AC_UF1000,1000_QL80_.jpg", desc: "The standard textbook in AI used worldwide.", embedUrl: "https://archive.org/embed/artificialintelli00russ_0" },
-            { id: 9, title: "Pattern Recognition & ML", author: "Christopher Bishop", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/71u+L2513yL._AC_UF1000,1000_QL80_.jpg", desc: "Comprehensive guide to Bayesian stats and ML algorithms.", embedUrl: "https://archive.org/embed/pattern-recognition-and-machine-learning-bishop" },
-            { id: 10, title: "The Design of Everyday Things", author: "Don Norman", category: "design", cover: "https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg", desc: "Fundamental principles of user-centered design.", embedUrl: "https://archive.org/embed/designofeveryday0000norm_k3i0" },
-            { id: 11, title: "Don't Make Me Think", author: "Steve Krug", category: "design", cover: "https://m.media-amazon.com/images/I/71f76G3y9SL._AC_UF1000,1000_QL80_.jpg", desc: "A Common Sense Approach to Web Usability.", embedUrl: "https://archive.org/embed/dontmakememethink0000krug_w3s6" },
-            { id: 12, title: "About Face: Interaction Design", author: "Alan Cooper", category: "design", cover: "https://m.media-amazon.com/images/I/71nFw5e75uL._AC_UF1000,1000_QL80_.jpg", desc: "The definitive guide to digital product design.", embedUrl: "https://archive.org/embed/aboutfaceessenial0000coop" },
-            { id: 13, title: "Python for Data Analysis", author: "Wes McKinney", category: "data-science", cover: "https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg", desc: "Data Wrangling with Pandas, NumPy, and Jupyter.", embedUrl: "https://wesmckinney.com/book/" },
-            { id: 14, title: "Hands-On Data Science with R", author: "Sal Mangiafico", category: "data-science", cover: "https://m.media-amazon.com/images/I/71sKxI7l1SL._AC_UF1000,1000_QL80_.jpg", desc: "Solving data science problems using R statistical software.", embedUrl: "https://archive.org/embed/handson-data-science-with-r" },
-            { id: 15, title: "Storytelling with Data", author: "Cole Knaflic", category: "data-science", cover: "https://m.media-amazon.com/images/I/71v27fVl-nL._AC_UF1000,1000_QL80_.jpg", desc: "A Data Visualization Guide for Business Professionals.", embedUrl: "https://archive.org/embed/storytellingwithdata0000knaf" },
-            { id: 16, title: "The Lean Startup", author: "Eric Ries", category: "business", cover: "https://m.media-amazon.com/images/I/81vvgZqCskL._AC_UF1000,1000_QL80_.jpg", desc: "How Constant Innovation Creates Successful Businesses.", embedUrl: "https://archive.org/embed/leanstartup00eric" },
-            { id: 17, title: "Zero to One", author: "Peter Thiel", category: "business", cover: "https://m.media-amazon.com/images/I/71m-2tqY0mL._AC_UF1000,1000_QL80_.jpg", desc: "Notes on Startups, or How to Build the Future.", embedUrl: "https://archive.org/embed/zerotoonenotesons0000thie_n8r5" },
-            { id: 18, title: "Introduction to Algorithms (CLRS)", author: "Thomas Cormen", category: "technology", cover: "https://m.media-amazon.com/images/I/71FXjX8M9qL._AC_UF1000,1000_QL80_.jpg", desc: "The comprehensive textbook on algorithms and data structures.", embedUrl: "https://archive.org/embed/introduction-to-algorithms-3rd-edition-sep-2009" },
-            { id: 19, title: "Computer Networking", author: "James Kurose", category: "technology", cover: "https://m.media-amazon.com/images/I/811mZl2LzPL._AC_UF1000,1000_QL80_.jpg", desc: "Modern internet architecture and networking protocols.", embedUrl: "https://archive.org/embed/computernetworking0000kuro_v2x6" },
-            { id: 20, title: "Code: The Hidden Language", author: "Charles Petzold", category: "technology", cover: "https://m.media-amazon.com/images/I/717F4sF+j1L._AC_UF1000,1000_QL80_.jpg", desc: "How computers work from ground up.", embedUrl: "https://archive.org/embed/codehiddenlangua00petz_0" }
+            { id: 1, title: "Clean Code", author: "Robert C. Martin", category: "programming", cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg", desc: "A Handbook of Agile Software Craftsmanship.", readUrl: "https://github.com/jnguyen0230/Clean-Code" },
+            { id: 2, title: "Python Crash Course", author: "Eric Matthes", category: "programming", cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg", desc: "A Hands-On, Project-Based Introduction to Programming.", readUrl: "https://ehmatthes.github.io/pcc_3e/" },
+            { id: 3, title: "The Pragmatic Programmer", author: "Andrew Hunt & David Thomas", category: "programming", cover: "https://m.media-amazon.com/images/I/71f743sOPmL._AC_UF1000,1000_QL80_.jpg", desc: "Your Journey to Software Mastery.", readUrl: "https://github.com/l-m-share/books/blob/master/The-Pragmatic-Programmer-20th-Anniversary-Edition.pdf" },
+            { id: 4, title: "Eloquent JavaScript", author: "Marijn Haverbeke", category: "programming", cover: "https://m.media-amazon.com/images/I/51INjpz6ZtL._AC_UF1000,1000_QL80_.jpg", desc: "A Modern Introduction to Programming in JavaScript.", readUrl: "https://eloquentjavascript.net/" },
+            { id: 5, title: "You Don't Know JS", author: "Kyle Simpson", category: "programming", cover: "https://m.media-amazon.com/images/I/7186Y6d70+L._AC_UF1000,1000_QL80_.jpg", desc: "Deep dive into the core mechanics of JavaScript.", readUrl: "https://github.com/getify/You-Dont-Know-JS" },
+            { id: 6, title: "Hands-On Machine Learning", author: "Aurélien Géron", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg", desc: "Concepts and Tools to Build Intelligent Systems.", readUrl: "https://github.com/ageron/handson-ml3" },
+            { id: 7, title: "Deep Learning Textbook", author: "Ian Goodfellow", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/61ScEipC3-L._AC_UF1000,1000_QL80_.jpg", desc: "An MIT Press foundational textbook on Deep Neural Nets.", readUrl: "https://www.deeplearningbook.org/" },
+            { id: 8, title: "Artificial Intelligence: Modern Approach", author: "Stuart Russell & Peter Norvig", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/81m9B-40jpL._AC_UF1000,1000_QL80_.jpg", desc: "The standard textbook in AI used worldwide.", readUrl: "http://aima.cs.berkeley.edu/" },
+            { id: 9, title: "Pattern Recognition & ML", author: "Christopher Bishop", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/71u+L2513yL._AC_UF1000,1000_QL80_.jpg", desc: "Comprehensive guide to Bayesian stats and ML algorithms.", readUrl: "https://www.microsoft.com/en-us/research/people/cmbishop/prml-book/" },
+            { id: 10, title: "The Design of Everyday Things", author: "Don Norman", category: "design", cover: "https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg", desc: "Fundamental principles of user-centered design.", readUrl: "https://jnd.org/the-design-of-everyday-things/" },
+            { id: 11, title: "Don't Make Me Think", author: "Steve Krug", category: "design", cover: "https://m.media-amazon.com/images/I/71f76G3y9SL._AC_UF1000,1000_QL80_.jpg", desc: "A Common Sense Approach to Web Usability.", readUrl: "https://sensible.com/dont-make-me-think/" },
+            { id: 12, title: "About Face: Interaction Design", author: "Alan Cooper", category: "design", cover: "https://m.media-amazon.com/images/I/71nFw5e75uL._AC_UF1000,1000_QL80_.jpg", desc: "The definitive guide to digital product design.", readUrl: "https://www.wiley.com/en-us/About+Face%3A+The+Essentials+of+Interaction+Design%2C+4th+Edition-p-9781118766573" },
+            { id: 13, title: "Python for Data Analysis", author: "Wes McKinney", category: "data-science", cover: "https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg", desc: "Data Wrangling with Pandas, NumPy, and Jupyter.", readUrl: "https://wesmckinney.com/book/" },
+            { id: 14, title: "Hands-On Data Science with R", author: "Sal Mangiafico", category: "data-science", cover: "https://m.media-amazon.com/images/I/71sKxI7l1SL._AC_UF1000,1000_QL80_.jpg", desc: "Solving data science problems using R statistical software.", readUrl: "https://rcompanion.org/handbook/" },
+            { id: 15, title: "Storytelling with Data", author: "Cole Knaflic", category: "data-science", cover: "https://m.media-amazon.com/images/I/71v27fVl-nL._AC_UF1000,1000_QL80_.jpg", desc: "A Data Visualization Guide for Business Professionals.", readUrl: "https://www.storytellingwithdata.com/books" },
+            { id: 16, title: "The Lean Startup", author: "Eric Ries", category: "business", cover: "https://m.media-amazon.com/images/I/81vvgZqCskL._AC_UF1000,1000_QL80_.jpg", desc: "How Constant Innovation Creates Successful Businesses.", readUrl: "http://theleanstartup.com/" },
+            { id: 17, title: "Zero to One", author: "Peter Thiel", category: "business", cover: "https://m.media-amazon.com/images/I/71m-2tqY0mL._AC_UF1000,1000_QL80_.jpg", desc: "Notes on Startups, or How to Build the Future.", readUrl: "https://zerotoonebook.com/" },
+            { id: 18, title: "Introduction to Algorithms (CLRS)", author: "Thomas Cormen", category: "technology", cover: "https://m.media-amazon.com/images/I/71FXjX8M9qL._AC_UF1000,1000_QL80_.jpg", desc: "The comprehensive textbook on algorithms and data structures.", readUrl: "https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/" },
+            { id: 19, title: "Computer Networking", author: "James Kurose", category: "technology", cover: "https://m.media-amazon.com/images/I/811mZl2LzPL._AC_UF1000,1000_QL80_.jpg", desc: "Modern internet architecture and networking protocols.", readUrl: "https://gaia.cs.umass.edu/kurose_ross/" },
+            { id: 20, title: "Code: The Hidden Language", author: "Charles Petzold", category: "technology", cover: "https://m.media-amazon.com/images/I/717F4sF+j1L._AC_UF1000,1000_QL80_.jpg", desc: "How computers work from ground up.", readUrl: "https://www.charlespetzold.com/code/" }
         ];
 
         let borrowedBooks = JSON.parse(localStorage.getItem('smart_borrowed_books')) || [];
@@ -133,7 +112,7 @@
                             <p class="book-author">${book.author}</p>
                             <p class="book-desc">${book.desc}</p>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-read" onclick="openReader(${book.id})">Read Book 📖</button>
+                                <a href="${book.readUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-read">Read Book 📖</a>
                                 <button type="button" class="btn btn-borrow ${isBorrowed ? 'borrowed' : ''}" onclick="toggleBorrow(${book.id})">
                                     ${isBorrowed ? 'Borrowed ✓' : 'Borrow'}
                                 </button>
@@ -142,21 +121,6 @@
                     </div>
                 `;
             }).join('');
-        }
-
-        function openReader(id) {
-            const book = booksData.find(b => b.id === id);
-            if (book) {
-                document.getElementById('modalTitle').innerText = book.title;
-                document.getElementById('modalAuthor').innerText = "By: " + book.author;
-                document.getElementById('bookFrame').src = book.embedUrl;
-                document.getElementById('readerModal').style.display = 'flex';
-            }
-        }
-
-        function closeReader() {
-            document.getElementById('readerModal').style.display = 'none';
-            document.getElementById('bookFrame').src = '';
         }
 
         function toggleBorrow(id) {
