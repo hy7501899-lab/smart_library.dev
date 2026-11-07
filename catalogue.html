@@ -1,57 +1,172 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogue | Smart Library</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="session.js" defer></script>
-    <script src="catalogue.js" defer></script>
-    <script src="chatbot.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        nav {
+            background: #211536;
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        h1 {
+            color: #211536;
+            margin-bottom: 5px;
+        }
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .book-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        .book-cover {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+        }
+        .book-info {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .book-title {
+            font-size: 1.1rem;
+            color: #211536;
+            margin-bottom: 5px;
+        }
+        .book-author {
+            font-size: 0.85rem;
+            color: #e67e22;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        .book-desc {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+        .btn-read { background: #211536; }
+        .btn-borrow { background: #e67e22; }
+    </style>
 </head>
-<body class="catalogue-page">
+<body>
 
-<header class="navbar inner-navbar">
-    <a href="home.html" class="logo">📚 Smart Library</a>
     <nav>
-        <a href="home.html">Home</a>
-        <a href="catalogue.html">Catalogue</a>
-        <a href="login.html" id="authLink">Login</a>
-        <a href="register.html" class="nav-btn" id="registerLink">Get Started</a>
+        <a href="home.html" style="font-size: 1.2rem;">📚 Smart Library</a>
+        <div>
+            <a href="home.html">Home</a>
+            <a href="catalogue.html">Catalogue</a>
+        </div>
     </nav>
-</header>
 
-<main class="catalogue-main">
-    <section class="catalogue-heading">
-        <p class="subtitle">YOUR NEXT FAVORITE BOOK</p>
-        <h1>Explore Our <span>Library</span></h1>
-        <p>Discover books, learn new skills, and explore new ideas.</p>
-    </section>
+    <div class="container">
+        <h1>Book Catalogue</h1>
+        <p style="color: #666;">Explore our library collection and start reading today.</p>
 
-    <section class="catalogue-tools">
-        <input type="search" id="searchInput"
-               placeholder="🔍 Search by title or author...">
+        <!-- شبكة الكتب -->
+        <div class="books-grid" id="booksGrid">
+            <!-- كتاب 1 -->
+            <div class="book-card">
+                <img src="https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg" class="book-cover" alt="Clean Code">
+                <div class="book-info">
+                    <h3 class="book-title">Clean Code</h3>
+                    <p class="book-author">Robert C. Martin</p>
+                    <p class="book-desc">A Handbook of Agile Software Craftsmanship.</p>
+                    <div class="btn-group">
+                        <button class="btn btn-read" onclick="alert('Opening Clean Code chapter...')">Read</button>
+                        <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
+                    </div>
+                </div>
+            </div>
 
-        <select id="categoryFilter">
-            <option value="all">All Categories</option>
-            <option value="Programming">Programming</option>
-            <option value="AI">Artificial Intelligence</option>
-            <option value="Design">Design</option>
-            <option value="Business">Business</option>
-            <option value="Data Science">Data Science</option>
-            <option value="Technology">Technology</option>
-        </select>
-    </section>
+            <!-- كتاب 2 -->
+            <div class="book-card">
+                <img src="https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg" class="book-cover" alt="Python Crash Course">
+                <div class="book-info">
+                    <h3 class="book-title">Python Crash Course</h3>
+                    <p class="book-author">Eric Matthes</p>
+                    <p class="book-desc">A Hands-On, Project-Based Introduction to Programming.</p>
+                    <div class="btn-group">
+                        <button class="btn btn-read" onclick="alert('Opening Python Crash Course...')">Read</button>
+                        <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
+                    </div>
+                </div>
+            </div>
 
-    <p id="resultsCount" class="results-count"></p>
+            <!-- كتاب 3 -->
+            <div class="book-card">
+                <img src="https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg" class="book-cover" alt="Machine Learning">
+                <div class="book-info">
+                    <h3 class="book-title">Hands-On Machine Learning</h3>
+                    <p class="book-author">Aurélien Géron</p>
+                    <p class="book-desc">Concepts, Tools, and Techniques to Build Intelligent Systems.</p>
+                    <div class="btn-group">
+                        <button class="btn btn-read" onclick="alert('Opening Machine Learning book...')">Read</button>
+                        <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
+                    </div>
+                </div>
+            </div>
 
-    <section id="booksGrid" class="books-grid"></section>
-</main>
-
-<footer class="site-footer">
-    <p>© 2026 Smart Library. Learn something new every day.</p>
-</footer>
+            <!-- كتاب 4 -->
+            <div class="book-card">
+                <img src="https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg" class="book-cover" alt="The Design of Everyday Things">
+                <div class="book-info">
+                    <h3 class="book-title">The Design of Everyday Things</h3>
+                    <p class="book-author">Don Norman</p>
+                    <p class="book-desc">Fundamental principles of intuitive and user-centered design.</p>
+                    <div class="btn-group">
+                        <button class="btn btn-read" onclick="alert('Opening Design book...')">Read</button>
+                        <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
