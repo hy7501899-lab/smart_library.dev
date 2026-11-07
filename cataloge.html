@@ -1,121 +1,93 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>كتالوج الكتب - Smart Library</title>
+    <title>Catalogue - Smart Library</title>
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --accent-color: #3498db;
-            --success-color: #27ae60;
-            --warning-color: #e67e22;
-            --bg-color: #f4f7f6;
+            --primary: #2c3e50;
+            --accent: #3498db;
+            --bg: #f8f9fa;
             --card-bg: #ffffff;
-            --text-color: #333333;
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            padding: 20px;
+            background-color: var(--bg);
+            color: #333;
         }
 
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 20px;
-            background: var(--primary-color);
+        nav {
+            background: var(--primary);
             color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-        }
-
-        .controls {
+            padding: 15px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            max-width: 1200px;
-            margin: 0 auto 20px auto;
-            flex-wrap: wrap;
-            gap: 15px;
         }
 
-        .search-box input {
-            padding: 10px 15px;
-            width: 300px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-
-        .btn {
-            background-color: var(--accent-color);
+        nav a {
             color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            transition: background 0.2s;
             text-decoration: none;
-            display: inline-block;
+            margin-left: 20px;
         }
 
-        .btn:hover { background-color: #2980b9; }
-        .btn-success { background-color: var(--success-color); }
-        .btn-success:hover { background-color: #219653; }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
 
-        .category-badge {
-            background: var(--warning-color);
-            color: white;
-            padding: 5px 12px;
+        .categories {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .cat-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
             border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            text-decoration: none;
+            color: #555;
             font-size: 0.9rem;
-            display: inline-block;
-            margin-bottom: 15px;
         }
 
-        /* شبكة عرض الكتب */
+        .cat-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
         .books-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 25px;
-            max-width: 1200px;
-            margin: 0 auto;
         }
 
         .book-card {
-            background: var(--card-bg);
-            border-radius: 10px;
+            background: white;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
             display: flex;
             flex-direction: column;
-            transition: transform 0.3s;
-        }
-
-        .book-card:hover {
-            transform: translateY(-5px);
         }
 
         .book-cover {
             width: 100%;
-            height: 250px;
+            height: 260px;
             object-fit: cover;
-            background-color: #ddd;
         }
 
         .book-info {
@@ -126,14 +98,14 @@
         }
 
         .book-title {
-            font-size: 1.2rem;
-            color: var(--primary-color);
+            font-size: 1.1rem;
             margin-bottom: 5px;
+            color: var(--primary);
         }
 
         .book-author {
-            font-size: 0.9rem;
-            color: var(--warning-color);
+            font-size: 0.85rem;
+            color: #e67e22;
             margin-bottom: 10px;
             font-weight: bold;
         }
@@ -143,28 +115,26 @@
             color: #666;
             margin-bottom: 15px;
             flex-grow: 1;
-            line-height: 1.4;
         }
 
-        .book-actions {
+        .actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
-        .book-actions button {
+        .btn {
             flex: 1;
             padding: 8px;
-            font-size: 0.9rem;
-            border-radius: 5px;
             border: none;
+            border-radius: 4px;
             cursor: pointer;
+            font-weight: bold;
         }
 
-        .btn-read { background-color: #34495e; color: white; }
-        .btn-borrow { background-color: var(--warning-color); color: white; }
-        .btn-borrow.borrowed { background-color: #95a5a6; cursor: not-allowed; }
+        .btn-read { background: #34495e; color: white; }
+        .btn-borrow { background: #e67e22; color: white; }
 
-        /* نوافذ منبثقة (Modal) */
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -172,261 +142,127 @@
             background: rgba(0,0,0,0.5);
             justify-content: center;
             align-items: center;
-            z-index: 1000;
         }
 
         .modal-content {
             background: white;
-            padding: 30px;
-            border-radius: 10px;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 500px;
             width: 90%;
-            max-width: 600px;
             max-height: 80vh;
             overflow-y: auto;
-            position: relative;
         }
-
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: #aaa;
-        }
-
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        .form-group textarea { height: 120px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <h1>كتالوج المكتبة الذكية</h1>
-        <p>استعرض واقرا الكتب المتاحة في المنصة</p>
-    </header>
+    <nav>
+        <h2>📚 Smart Library</h2>
+        <div>
+            <a href="home.html">Home</a>
+            <a href="catalogue.html">Catalogue</a>
+        </div>
+    </nav>
 
-    <div class="controls">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <a href="catalogue.html" class="btn" style="background-color: #7f8c8d;">كل الكتب</a>
-            <span id="categoryTitle" class="category-badge" style="margin: 0; display: none;"></span>
+    <div class="container">
+        <div class="categories">
+            <a href="catalogue.html" class="cat-btn" id="cat-all">All Categories</a>
+            <a href="catalogue.html?category=programming" class="cat-btn" id="cat-programming">Programming</a>
+            <a href="catalogue.html?category=ai" class="cat-btn" id="cat-ai">Artificial Intelligence</a>
+            <a href="catalogue.html?category=design" class="cat-btn" id="cat-design">Design</a>
+            <a href="catalogue.html?category=business" class="cat-btn" id="cat-business">Business</a>
+            <a href="catalogue.html?category=datascience" class="cat-btn" id="cat-datascience">Data Science</a>
+            <a href="catalogue.html?category=technology" class="cat-btn" id="cat-technology">Technology</a>
         </div>
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث عن كتاب..." onkeyup="filterBooks()">
-        </div>
-        <button class="btn btn-success" onclick="openAddModal()">+ إضافة كتاب جديد</button>
+
+        <div class="books-grid" id="booksContainer"></div>
     </div>
 
-    <!-- شبكة الكتب -->
-    <div class="books-grid" id="booksGrid"></div>
-
-    <!-- نافذة قراءة الكتاب -->
     <div class="modal" id="readModal">
         <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('readModal')">&times;</span>
-            <h2 id="readTitle" style="color: var(--primary-color); margin-bottom: 10px;"></h2>
-            <h4 id="readAuthor" style="color: var(--warning-color); margin-bottom: 20px;"></h4>
-            <p id="readContent" style="line-height: 1.8; color: #444; white-space: pre-line;"></p>
-        </div>
-    </div>
-
-    <!-- نافذة إضافة كتاب -->
-    <div class="modal" id="addModal">
-        <div class="modal-content">
-            <span class="close-btn" onclick="closeModal('addModal')">&times;</span>
-            <h2 style="margin-bottom: 20px;">إضافة كتاب جديد للمنصة</h2>
-            <div class="form-group">
-                <label>عنوان الكتاب:</label>
-                <input type="text" id="newTitle" placeholder="أدخل عنوان الكتاب">
-            </div>
-            <div class="form-group">
-                <label>اسم المؤلف:</label>
-                <input type="text" id="newAuthor" placeholder="اسم المؤلف">
-            </div>
-            <div class="form-group">
-                <label>التصنيف:</label>
-                <select id="newCategory">
-                    <option value="programming">برمجة (Programming)</option>
-                    <option value="ai">ذكاء اصطناعي (AI)</option>
-                    <option value="science">علوم عامة (Science)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>رابط صورة الغلاف (URL):</label>
-                <input type="text" id="newCover" placeholder="رابط الصورة">
-            </div>
-            <div class="form-group">
-                <label>نبذة مختصرة:</label>
-                <input type="text" id="newDesc" placeholder="وصف قصير للكتاب">
-            </div>
-            <div class="form-group">
-                <label>محتوى الكتاب للقراءة:</label>
-                <textarea id="newContent" placeholder="اكتب أو الصق محتوى الكتاب..."></textarea>
-            </div>
-            <button class="btn btn-success" style="width: 100%;" onclick="addNewBook()">نشر الكتاب</button>
+            <h3 id="modalTitle"></h3>
+            <p id="modalAuthor" style="color: #e67e22; margin: 10px 0;"></p>
+            <p id="modalText" style="line-height: 1.6; white-space: pre-line;"></p>
+            <button onclick="closeModal()" style="margin-top: 15px; padding: 8px 16px; cursor: pointer;">Close</button>
         </div>
     </div>
 
     <script>
-        // قاعدة بيانات افتراضية للكتب تحتوي على تصنيفات
-        let defaultBooks = [
-            {
-                id: 1,
-                title: "Clean Code",
-                author: "Robert C. Martin",
-                category: "programming",
-                cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg",
-                desc: "دليل شامل لكتابة كود برمجي نظيف واحترافي.",
-                content: "الفصل الأول: كود نظيف.\nالكود سيظل موجوداً دائماً مهما حدث. الهدف من هندسة البرمجيات هو إدارة التعقيد وكتابة برمجيات يفهمها البشر.",
-                borrowed: false
-            },
-            {
-                id: 2,
-                title: "Python Crash Course",
-                author: "Eric Matthes",
-                category: "programming",
-                cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg",
-                desc: "مقدمة عملية وسريعة للغة بايثون ومشاريع التطبيق.",
-                content: "الفصل الأول: البداية مع Python.\nتعتبر بايثون من أسهل وأقوى لغات البرمجة استخداماً في تطوير الويب والذكاء الاصطناعي.",
-                borrowed: false
-            },
-            {
-                id: 3,
-                title: "Hands-On Machine Learning",
-                author: "Aurélien Géron",
-                category: "ai",
-                cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg",
-                desc: "تعلم الآلة والشبكات العصبية باستخدام TensorFlow.",
-                content: "الفصل الأول: نظرة عامة على تعلم الآلة.\nالتعلم الآلي هو علم تمكين الحواسيب من التعلم دون أن يتم برمجتها بشكل صريح.",
-                borrowed: false
-            }
+        // قاعدة البيانات الشاملة لكل الأقسام
+        const allBooks = [
+            // Programming
+            { id: 1, category: 'programming', title: 'Clean Code', author: 'Robert C. Martin', cover: 'https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg', desc: 'A Handbook of Agile Software Craftsmanship.', text: 'Chapter 1: Clean Code.\nEven bad code can function. But if code isn\'t clean, it can bring a development organization to its knees.' },
+            { id: 2, category: 'programming', title: 'Python Crash Course', author: 'Eric Matthes', cover: 'https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg', desc: 'A Hands-On, Project-Based Introduction to Programming.', text: 'Chapter 1: Getting Started with Python.\nPython is a versatile and readable programming language ideal for beginners and experts.' },
+            
+            // AI
+            { id: 3, category: 'ai', title: 'Hands-On Machine Learning', author: 'Aurélien Géron', cover: 'https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg', desc: 'Concepts, Tools, and Techniques to Build Intelligent Systems.', text: 'Chapter 1: The Machine Learning Landscape.\nMachine Learning is the science of programming computers so they can learn from data.' },
+            { id: 4, category: 'ai', title: 'Deep Learning', author: 'Ian Goodfellow', cover: 'https://m.media-amazon.com/images/I/61ScEipC3-L._AC_UF1000,1000_QL80_.jpg', desc: 'An MIT Press book on deep learning fundamentals.', text: 'Chapter 1: Introduction to Neural Networks.\nDeep learning allows computational models composed of multiple processing layers to learn representations.' },
+
+            // Design
+            { id: 5, category: 'design', title: 'The Design of Everyday Things', author: 'Don Norman', cover: 'https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg', desc: 'Fundamental principles of intuitive design.', text: 'Chapter 1: The Psychopathology of Everyday Things.\nTwo of the most important characteristics of good design are discoverability and understanding.' },
+
+            // Business
+            { id: 6, category: 'business', title: 'The Lean Startup', author: 'Eric Ries', cover: 'https://m.media-amazon.com/images/I/81vvgZqCskL._AC_UF1000,1000_QL80_.jpg', desc: 'How Constant Innovation Creates Radically Successful Businesses.', text: 'Chapter 1: Start.\nStartup success is not the result of good genes or being in the right place at the right time. Startup success can be engineered.' },
+
+            // Data Science
+            { id: 7, category: 'datascience', title: 'Python for Data Analysis', author: 'Wes McKinney', cover: 'https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg', desc: 'Data Wrangling with Pandas, NumPy, and Jupyter.', text: 'Chapter 1: Data Analytics Essentials.\nData science encompasses data processing, statistical analysis, and machine learning.' },
+
+            // Technology
+            { id: 8, category: 'technology', title: 'The Pragmatic Programmer', author: 'Andrew Hunt', cover: 'https://m.media-amazon.com/images/I/71f743sOPmL._AC_UF1000,1000_QL80_.jpg', desc: 'Your Journey To Mastery in technology.', text: 'Chapter 1: A Pragmatic Philosophy.\nPragmatic Programmers take responsibility for their own career and aren\'t afraid to admit ignorance or error.' }
         ];
 
-        let books = JSON.parse(localStorage.getItem('smart_library_books')) || defaultBooks;
+        // قراءة الـ Category من الـ URL
+        const params = new URLSearchParams(window.location.search);
+        let selectedCat = params.get('category');
 
-        // قراءة التصنيف من الرابط (URL parameters) مثل ?category=programming
-        const urlParams = new URLSearchParams(window.location.search);
-        const currentCategory = urlParams.get('category');
+        // تحديد الزر النشط
+        if (selectedCat) {
+            const activeBtn = document.getElementById(`cat-${selectedCat}`);
+            if (activeBtn) activeBtn.classList.add('active');
+        } else {
+            document.getElementById('cat-all').classList.add('active');
+        }
 
-        function renderBooks(booksToDisplay) {
-            const grid = document.getElementById('booksGrid');
-            grid.innerHTML = '';
+        // تصفية الكتب
+        const filteredBooks = selectedCat 
+            ? allBooks.filter(b => b.category.toLowerCase() === selectedCat.toLowerCase()) 
+            : allBooks;
 
-            if (booksToDisplay.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #7f8c8d; font-size: 1.2rem; padding: 40px;">لا توجد كتب مضافة في هذا القسم حالياً.</p>';
-                return;
-            }
-
-            booksToDisplay.forEach(book => {
-                const card = document.createElement('div');
-                card.className = 'book-card';
-                card.innerHTML = `
-                    <img src="${book.cover || 'https://via.placeholder.com/280x250?text=No+Cover'}" alt="${book.title}" class="book-cover">
+        // عرض الكتب
+        const container = document.getElementById('booksContainer');
+        if (filteredBooks.length === 0) {
+            container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; font-size: 1.2rem; color: #888; padding: 40px;">No books found in this category.</p>`;
+        } else {
+            container.innerHTML = filteredBooks.map(book => `
+                <div class="book-card">
+                    <img src="${book.cover}" class="book-cover" alt="${book.title}">
                     <div class="book-info">
-                        <h3 class="book-title">${book.title}</h3>
-                        <p class="book-author">بقلم: ${book.author}</p>
+                        <h4 class="book-title">${book.title}</h4>
+                        <span class="book-author">${book.author}</span>
                         <p class="book-desc">${book.desc}</p>
-                        <div class="book-actions">
-                            <button class="btn-read" onclick="readBook(${book.id})">اقرأ</button>
-                            <button class="btn-borrow ${book.borrowed ? 'borrowed' : ''}" onclick="toggleBorrow(${book.id})">
-                                ${book.borrowed ? 'مستعار حالياً' : 'استعارة'}
-                            </button>
+                        <div class="actions">
+                            <button class="btn btn-read" onclick="readBook(${book.id})">Read</button>
+                            <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
                         </div>
                     </div>
-                `;
-                grid.appendChild(card);
-            });
-        }
-
-        function filterAndDisplay() {
-            let filtered = books;
-            if (currentCategory) {
-                filtered = books.filter(b => b.category === currentCategory);
-                const badge = document.getElementById('categoryTitle');
-                badge.innerText = "التصنيف: " + currentCategory;
-                badge.style.display = 'inline-block';
-            }
-            renderBooks(filtered);
-        }
-
-        function filterBooks() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            let filtered = books;
-            if (currentCategory) {
-                filtered = filtered.filter(b => b.category === currentCategory);
-            }
-            const searched = filtered.filter(b => b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query));
-            renderBooks(searched);
+                </div>
+            `).join('');
         }
 
         function readBook(id) {
-            const book = books.find(b => b.id === id);
+            const book = allBooks.find(b => b.id === id);
             if (book) {
-                document.getElementById('readTitle').innerText = book.title;
-                document.getElementById('readAuthor').innerText = "تأليف: " + book.author;
-                document.getElementById('readContent').innerText = book.content || "لا يتوفر محتوى نصي لهذا الكتاب حالياً.";
+                document.getElementById('modalTitle').innerText = book.title;
+                document.getElementById('modalAuthor').innerText = 'Author: ' + book.author;
+                document.getElementById('modalText').innerText = book.text;
                 document.getElementById('readModal').style.display = 'flex';
             }
         }
 
-        function toggleBorrow(id) {
-            const book = books.find(b => b.id === id);
-            if (book) {
-                book.borrowed = !book.borrowed;
-                localStorage.setItem('smart_library_books', JSON.stringify(books));
-                filterAndDisplay();
-            }
+        function closeModal() {
+            document.getElementById('readModal').style.display = 'none';
         }
-
-        function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
-        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
-
-        function addNewBook() {
-            const title = document.getElementById('newTitle').value;
-            const author = document.getElementById('newAuthor').value;
-            const category = document.getElementById('newCategory').value;
-            const cover = document.getElementById('newCover').value;
-            const desc = document.getElementById('newDesc').value;
-            const content = document.getElementById('newContent').value;
-
-            if (!title || !author) {
-                alert('الرجاء إدخال عنوان الكتاب واسم المؤلف!');
-                return;
-            }
-
-            const newBook = {
-                id: Date.now(),
-                title,
-                author,
-                category,
-                cover,
-                desc,
-                content,
-                borrowed: false
-            };
-
-            books.push(newBook);
-            localStorage.setItem('smart_library_books', JSON.stringify(books));
-            filterAndDisplay();
-            closeModal('addModal');
-
-            // تفريغ الحقول
-            document.getElementById('newTitle').value = '';
-            document.getElementById('newAuthor').value = '';
-            document.getElementById('newCover').value = '';
-            document.getElementById('newDesc').value = '';
-            document.getElementById('newContent').value = '';
-        }
-
-        // تشغيل العرض عند تحميل الصفحة
-        filterAndDisplay();
     </script>
 </body>
 </html>
