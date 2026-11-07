@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة المكتبة الذكية - Smart Library</title>
+    <title>كتالوج الكتب - Smart Library</title>
     <style>
         :root {
             --primary-color: #2c3e50;
@@ -43,11 +43,6 @@
             margin-bottom: 10px;
         }
 
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
-
         .controls {
             display: flex;
             justify-content: space-between;
@@ -75,17 +70,22 @@
             cursor: pointer;
             font-size: 1rem;
             transition: background 0.2s;
+            text-decoration: none;
+            display: inline-block;
         }
 
-        .btn:hover {
-            background-color: #2980b9;
-        }
+        .btn:hover { background-color: #2980b9; }
+        .btn-success { background-color: var(--success-color); }
+        .btn-success:hover { background-color: #219653; }
 
-        .btn-success {
-            background-color: var(--success-color);
-        }
-        .btn-success:hover {
-            background-color: #219653;
+        .category-badge {
+            background: var(--warning-color);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            display: inline-block;
+            margin-bottom: 15px;
         }
 
         /* شبكة عرض الكتب */
@@ -164,7 +164,7 @@
         .btn-borrow { background-color: var(--warning-color); color: white; }
         .btn-borrow.borrowed { background-color: #95a5a6; cursor: not-allowed; }
 
-        /* نافذة منبثقة (Modal) للقراءة أو إضافة كتاب */
+        /* نوافذ منبثقة (Modal) */
         .modal {
             display: none;
             position: fixed;
@@ -195,46 +195,37 @@
             color: #aaa;
         }
 
-        .close-btn:hover { color: #000; }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-
-        .form-group input, .form-group textarea {
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group textarea, .form-group select {
             width: 100%;
             padding: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-
         .form-group textarea { height: 120px; }
     </style>
 </head>
 <body>
 
     <header>
-        <h1>منصة المكتبة الذكية (Smart Library)</h1>
-        <p>استعرض، استعِر، اقرأ، وأضف كتبك المفضلة بكل سهولة</p>
+        <h1>كتالوج المكتبة الذكية</h1>
+        <p>استعرض واقرا الكتب المتاحة في المنصة</p>
     </header>
 
     <div class="controls">
-        <div class="search-box">
-            <input type="text" id="searchInput" placeholder="ابحث عن عنوان كتاب أو مؤلف..." onkeyup="filterBooks()">
+        <div style="display: flex; gap: 10px; align-items: center;">
+            <a href="catalogue.html" class="btn" style="background-color: #7f8c8d;">كل الكتب</a>
+            <span id="categoryTitle" class="category-badge" style="margin: 0; display: none;"></span>
         </div>
-        <button class="btn btn-success" onclick="openAddModal()">+ إضافة وكتابة كتاب جديد</button>
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ابحث عن كتاب..." onkeyup="filterBooks()">
+        </div>
+        <button class="btn btn-success" onclick="openAddModal()">+ إضافة كتاب جديد</button>
     </div>
 
-    <!-- شبكة عرض الكتب -->
-    <div class="books-grid" id="booksGrid">
-        <!-- يتم تعبئة الكتب ديناميكياً عبر JavaScript -->
-    </div>
+    <!-- شبكة الكتب -->
+    <div class="books-grid" id="booksGrid"></div>
 
     <!-- نافذة قراءة الكتاب -->
     <div class="modal" id="readModal">
@@ -246,61 +237,92 @@
         </div>
     </div>
 
-    <!-- نافذة إضافة كتاب جديد -->
+    <!-- نافذة إضافة كتاب -->
     <div class="modal" id="addModal">
         <div class="modal-content">
             <span class="close-btn" onclick="closeModal('addModal')">&times;</span>
-            <h2 style="margin-bottom: 20px;">إضافة ونشر كتاب جديد</h2>
+            <h2 style="margin-bottom: 20px;">إضافة كتاب جديد للمنصة</h2>
             <div class="form-group">
                 <label>عنوان الكتاب:</label>
                 <input type="text" id="newTitle" placeholder="أدخل عنوان الكتاب">
             </div>
             <div class="form-group">
                 <label>اسم المؤلف:</label>
-                <input type="text" id="newAuthor" placeholder="أدخل اسم المؤلف">
+                <input type="text" id="newAuthor" placeholder="اسم المؤلف">
             </div>
             <div class="form-group">
-                <label>رابط صورة الغلاف:</label>
-                <input type="text" id="newCover" placeholder="رابط صورة (URL)">
+                <label>التصنيف:</label>
+                <select id="newCategory">
+                    <option value="programming">برمجة (Programming)</option>
+                    <option value="ai">ذكاء اصطناعي (AI)</option>
+                    <option value="science">علوم عامة (Science)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>رابط صورة الغلاف (URL):</label>
+                <input type="text" id="newCover" placeholder="رابط الصورة">
             </div>
             <div class="form-group">
                 <label>نبذة مختصرة:</label>
                 <input type="text" id="newDesc" placeholder="وصف قصير للكتاب">
             </div>
             <div class="form-group">
-                <label>محتوى الكتاب (للقراءة):</label>
-                <textarea id="newContent" placeholder="اكتب أو الصق فصول ومحتوى الكتاب هنا..."></textarea>
+                <label>محتوى الكتاب للقراءة:</label>
+                <textarea id="newContent" placeholder="اكتب أو الصق محتوى الكتاب..."></textarea>
             </div>
-            <button class="btn btn-success" style="width: 100%;" onclick="addNewBook()">نشر الكتاب في المنصة</button>
+            <button class="btn btn-success" style="width: 100%;" onclick="addNewBook()">نشر الكتاب</button>
         </div>
     </div>
 
     <script>
-        // قاعدة البيانات الافتراضية للكتب (يمكنك إضافة المزيد هنا)
-        let books = JSON.parse(localStorage.getItem('smart_library_books')) || [
+        // قاعدة بيانات افتراضية للكتب تحتوي على تصنيفات
+        let defaultBooks = [
             {
                 id: 1,
                 title: "Clean Code",
                 author: "Robert C. Martin",
+                category: "programming",
                 cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg",
-                desc: "دليل شامل لكتابة كود برمجي نظيف وقابل للصيانة والاحترافية.",
-                content: "الفصل الأول: كود نظيف.\n\nالكود سيظل موجوداً دائماً مهما حدث. حتى لو قمنا بتحويل أجزاء منه إلى مواصفات، فالكود هو التفاصيل الدقيقة التي تنفذ ما نريد.\n\nالهدف من هندسة البرمجيات هو إدارة التعقيد وكتابة برمجيات يفهمها البشر قبل الآلات.",
+                desc: "دليل شامل لكتابة كود برمجي نظيف واحترافي.",
+                content: "الفصل الأول: كود نظيف.\nالكود سيظل موجوداً دائماً مهما حدث. الهدف من هندسة البرمجيات هو إدارة التعقيد وكتابة برمجيات يفهمها البشر.",
                 borrowed: false
             },
             {
                 id: 2,
                 title: "Python Crash Course",
                 author: "Eric Matthes",
+                category: "programming",
                 cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg",
-                desc: "مقدمة عملية وسريعة للغة بايثون ومشاريع التطبيق الذكي.",
-                content: "الفصل الأول: البداية مع Python.\n\nتعتبر بايثون من أسهل وأقوى لغات البرمجة استخداماً في الذكاء الاصطناعي وتحليل البيانات وتطوير الويب.\n\nفي هذا الكتاب ستتعلم المتغيرات، الدوال، وكيفية بناء مشاريع حقيقية خطوة بخطوة.",
+                desc: "مقدمة عملية وسريعة للغة بايثون ومشاريع التطبيق.",
+                content: "الفصل الأول: البداية مع Python.\nتعتبر بايثون من أسهل وأقوى لغات البرمجة استخداماً في تطوير الويب والذكاء الاصطناعي.",
+                borrowed: false
+            },
+            {
+                id: 3,
+                title: "Hands-On Machine Learning",
+                author: "Aurélien Géron",
+                category: "ai",
+                cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg",
+                desc: "تعلم الآلة والشبكات العصبية باستخدام TensorFlow.",
+                content: "الفصل الأول: نظرة عامة على تعلم الآلة.\nالتعلم الآلي هو علم تمكين الحواسيب من التعلم دون أن يتم برمجتها بشكل صريح.",
                 borrowed: false
             }
         ];
 
-        function renderBooks(booksToDisplay = books) {
+        let books = JSON.parse(localStorage.getItem('smart_library_books')) || defaultBooks;
+
+        // قراءة التصنيف من الرابط (URL parameters) مثل ?category=programming
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCategory = urlParams.get('category');
+
+        function renderBooks(booksToDisplay) {
             const grid = document.getElementById('booksGrid');
             grid.innerHTML = '';
+
+            if (booksToDisplay.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #7f8c8d; font-size: 1.2rem; padding: 40px;">لا توجد كتب مضافة في هذا القسم حالياً.</p>';
+                return;
+            }
 
             booksToDisplay.forEach(book => {
                 const card = document.createElement('div');
@@ -323,10 +345,25 @@
             });
         }
 
+        function filterAndDisplay() {
+            let filtered = books;
+            if (currentCategory) {
+                filtered = books.filter(b => b.category === currentCategory);
+                const badge = document.getElementById('categoryTitle');
+                badge.innerText = "التصنيف: " + currentCategory;
+                badge.style.display = 'inline-block';
+            }
+            renderBooks(filtered);
+        }
+
         function filterBooks() {
             const query = document.getElementById('searchInput').value.toLowerCase();
-            const filtered = books.filter(b => b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query));
-            renderBooks(filtered);
+            let filtered = books;
+            if (currentCategory) {
+                filtered = filtered.filter(b => b.category === currentCategory);
+            }
+            const searched = filtered.filter(b => b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query));
+            renderBooks(searched);
         }
 
         function readBook(id) {
@@ -344,27 +381,23 @@
             if (book) {
                 book.borrowed = !book.borrowed;
                 localStorage.setItem('smart_library_books', JSON.stringify(books));
-                renderBooks();
+                filterAndDisplay();
             }
         }
 
-        function openAddModal() {
-            document.getElementById('addModal').style.display = 'flex';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
+        function openAddModal() { document.getElementById('addModal').style.display = 'flex'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
 
         function addNewBook() {
             const title = document.getElementById('newTitle').value;
             const author = document.getElementById('newAuthor').value;
+            const category = document.getElementById('newCategory').value;
             const cover = document.getElementById('newCover').value;
             const desc = document.getElementById('newDesc').value;
             const content = document.getElementById('newContent').value;
 
             if (!title || !author) {
-                alert('الرجاء إدخال عنوان الكتاب واسم المؤلف على الأقل!');
+                alert('الرجاء إدخال عنوان الكتاب واسم المؤلف!');
                 return;
             }
 
@@ -372,6 +405,7 @@
                 id: Date.now(),
                 title,
                 author,
+                category,
                 cover,
                 desc,
                 content,
@@ -380,7 +414,7 @@
 
             books.push(newBook);
             localStorage.setItem('smart_library_books', JSON.stringify(books));
-            renderBooks();
+            filterAndDisplay();
             closeModal('addModal');
 
             // تفريغ الحقول
@@ -392,7 +426,7 @@
         }
 
         // تشغيل العرض عند تحميل الصفحة
-        renderBooks();
+        filterAndDisplay();
     </script>
 </body>
 </html>
