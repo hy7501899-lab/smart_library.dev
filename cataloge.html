@@ -1,19 +1,398 @@
-<div id="books-container" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; padding: 20px;"></div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منصة المكتبة الذكية - Smart Library</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #e67e22;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+        }
 
-<script>
-  fetch('./books.json')
-    .then(response => response.json())
-    .then(books => {
-      const container = document.getElementById('books-container');
-      if (!container) return;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-      container.innerHTML = books.map(book => `
-        <div style="background: #1e1b4b; border-radius: 12px; padding: 15px; color: white; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
-          <img src="${book.cover}" alt="${book.title}" style="width: 120px; height: 160px; object-fit: cover; border-radius: 8px; margin-bottom: 10px;">
-          <h3 style="font-size: 15px; margin: 5px 0; height: 40px; overflow: hidden;">${book.title}</h3>
-          <p style="font-size: 12px; color: #a5b4fc; margin-bottom: 15px;">${book.author}</p>
-          <a href="${book.readUrl}" target="_blank" style="background: #7c3aed; color: white; padding: 8px 14px; border-radius: 6px; text-decoration: none; font-size: 13px; display: inline-block; font-weight: bold;">📖 اقرأ الآن</a>
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto 20px auto;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .search-box input {
+            padding: 10px 15px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #2980b9;
+        }
+
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        .btn-success:hover {
+            background-color: #219653;
+        }
+
+        /* شبكة عرض الكتب */
+        .books-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .book-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s;
+        }
+
+        .book-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .book-cover {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background-color: #ddd;
+        }
+
+        .book-info {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .book-title {
+            font-size: 1.2rem;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .book-author {
+            font-size: 0.9rem;
+            color: var(--warning-color);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .book-desc {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 15px;
+            flex-grow: 1;
+            line-height: 1.4;
+        }
+
+        .book-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .book-actions button {
+            flex: 1;
+            padding: 8px;
+            font-size: 0.9rem;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-read { background-color: #34495e; color: white; }
+        .btn-borrow { background-color: var(--warning-color); color: white; }
+        .btn-borrow.borrowed { background-color: #95a5a6; cursor: not-allowed; }
+
+        /* نافذة منبثقة (Modal) للقراءة أو إضافة كتاب */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #aaa;
+        }
+
+        .close-btn:hover { color: #000; }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-group textarea { height: 120px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>منصة المكتبة الذكية (Smart Library)</h1>
+        <p>استعرض، استعِر، اقرأ، وأضف كتبك المفضلة بكل سهولة</p>
+    </header>
+
+    <div class="controls">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="ابحث عن عنوان كتاب أو مؤلف..." onkeyup="filterBooks()">
         </div>
-      `).join('');
-    });
-</script>
+        <button class="btn btn-success" onclick="openAddModal()">+ إضافة وكتابة كتاب جديد</button>
+    </div>
+
+    <!-- شبكة عرض الكتب -->
+    <div class="books-grid" id="booksGrid">
+        <!-- يتم تعبئة الكتب ديناميكياً عبر JavaScript -->
+    </div>
+
+    <!-- نافذة قراءة الكتاب -->
+    <div class="modal" id="readModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('readModal')">&times;</span>
+            <h2 id="readTitle" style="color: var(--primary-color); margin-bottom: 10px;"></h2>
+            <h4 id="readAuthor" style="color: var(--warning-color); margin-bottom: 20px;"></h4>
+            <p id="readContent" style="line-height: 1.8; color: #444; white-space: pre-line;"></p>
+        </div>
+    </div>
+
+    <!-- نافذة إضافة كتاب جديد -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal('addModal')">&times;</span>
+            <h2 style="margin-bottom: 20px;">إضافة ونشر كتاب جديد</h2>
+            <div class="form-group">
+                <label>عنوان الكتاب:</label>
+                <input type="text" id="newTitle" placeholder="أدخل عنوان الكتاب">
+            </div>
+            <div class="form-group">
+                <label>اسم المؤلف:</label>
+                <input type="text" id="newAuthor" placeholder="أدخل اسم المؤلف">
+            </div>
+            <div class="form-group">
+                <label>رابط صورة الغلاف:</label>
+                <input type="text" id="newCover" placeholder="رابط صورة (URL)">
+            </div>
+            <div class="form-group">
+                <label>نبذة مختصرة:</label>
+                <input type="text" id="newDesc" placeholder="وصف قصير للكتاب">
+            </div>
+            <div class="form-group">
+                <label>محتوى الكتاب (للقراءة):</label>
+                <textarea id="newContent" placeholder="اكتب أو الصق فصول ومحتوى الكتاب هنا..."></textarea>
+            </div>
+            <button class="btn btn-success" style="width: 100%;" onclick="addNewBook()">نشر الكتاب في المنصة</button>
+        </div>
+    </div>
+
+    <script>
+        // قاعدة البيانات الافتراضية للكتب (يمكنك إضافة المزيد هنا)
+        let books = JSON.parse(localStorage.getItem('smart_library_books')) || [
+            {
+                id: 1,
+                title: "Clean Code",
+                author: "Robert C. Martin",
+                cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg",
+                desc: "دليل شامل لكتابة كود برمجي نظيف وقابل للصيانة والاحترافية.",
+                content: "الفصل الأول: كود نظيف.\n\nالكود سيظل موجوداً دائماً مهما حدث. حتى لو قمنا بتحويل أجزاء منه إلى مواصفات، فالكود هو التفاصيل الدقيقة التي تنفذ ما نريد.\n\nالهدف من هندسة البرمجيات هو إدارة التعقيد وكتابة برمجيات يفهمها البشر قبل الآلات.",
+                borrowed: false
+            },
+            {
+                id: 2,
+                title: "Python Crash Course",
+                author: "Eric Matthes",
+                cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg",
+                desc: "مقدمة عملية وسريعة للغة بايثون ومشاريع التطبيق الذكي.",
+                content: "الفصل الأول: البداية مع Python.\n\nتعتبر بايثون من أسهل وأقوى لغات البرمجة استخداماً في الذكاء الاصطناعي وتحليل البيانات وتطوير الويب.\n\nفي هذا الكتاب ستتعلم المتغيرات، الدوال، وكيفية بناء مشاريع حقيقية خطوة بخطوة.",
+                borrowed: false
+            }
+        ];
+
+        function renderBooks(booksToDisplay = books) {
+            const grid = document.getElementById('booksGrid');
+            grid.innerHTML = '';
+
+            booksToDisplay.forEach(book => {
+                const card = document.createElement('div');
+                card.className = 'book-card';
+                card.innerHTML = `
+                    <img src="${book.cover || 'https://via.placeholder.com/280x250?text=No+Cover'}" alt="${book.title}" class="book-cover">
+                    <div class="book-info">
+                        <h3 class="book-title">${book.title}</h3>
+                        <p class="book-author">بقلم: ${book.author}</p>
+                        <p class="book-desc">${book.desc}</p>
+                        <div class="book-actions">
+                            <button class="btn-read" onclick="readBook(${book.id})">اقرأ</button>
+                            <button class="btn-borrow ${book.borrowed ? 'borrowed' : ''}" onclick="toggleBorrow(${book.id})">
+                                ${book.borrowed ? 'مستعار حالياً' : 'استعارة'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterBooks() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const filtered = books.filter(b => b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query));
+            renderBooks(filtered);
+        }
+
+        function readBook(id) {
+            const book = books.find(b => b.id === id);
+            if (book) {
+                document.getElementById('readTitle').innerText = book.title;
+                document.getElementById('readAuthor').innerText = "تأليف: " + book.author;
+                document.getElementById('readContent').innerText = book.content || "لا يتوفر محتوى نصي لهذا الكتاب حالياً.";
+                document.getElementById('readModal').style.display = 'flex';
+            }
+        }
+
+        function toggleBorrow(id) {
+            const book = books.find(b => b.id === id);
+            if (book) {
+                book.borrowed = !book.borrowed;
+                localStorage.setItem('smart_library_books', JSON.stringify(books));
+                renderBooks();
+            }
+        }
+
+        function openAddModal() {
+            document.getElementById('addModal').style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function addNewBook() {
+            const title = document.getElementById('newTitle').value;
+            const author = document.getElementById('newAuthor').value;
+            const cover = document.getElementById('newCover').value;
+            const desc = document.getElementById('newDesc').value;
+            const content = document.getElementById('newContent').value;
+
+            if (!title || !author) {
+                alert('الرجاء إدخال عنوان الكتاب واسم المؤلف على الأقل!');
+                return;
+            }
+
+            const newBook = {
+                id: Date.now(),
+                title,
+                author,
+                cover,
+                desc,
+                content,
+                borrowed: false
+            };
+
+            books.push(newBook);
+            localStorage.setItem('smart_library_books', JSON.stringify(books));
+            renderBooks();
+            closeModal('addModal');
+
+            // تفريغ الحقول
+            document.getElementById('newTitle').value = '';
+            document.getElementById('newAuthor').value = '';
+            document.getElementById('newCover').value = '';
+            document.getElementById('newDesc').value = '';
+            document.getElementById('newContent').value = '';
+        }
+
+        // تشغيل العرض عند تحميل الصفحة
+        renderBooks();
+    </script>
+</body>
+</html>
