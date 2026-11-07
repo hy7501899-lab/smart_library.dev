@@ -5,11 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogue | Smart Library</title>
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa;
-            margin: 0;
-            padding: 0;
             color: #333;
         }
         nav {
@@ -83,15 +86,59 @@
         }
         .btn {
             flex: 1;
-            padding: 8px;
+            padding: 10px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-weight: bold;
             color: white;
+            transition: 0.2s;
         }
         .btn-read { background: #211536; }
+        .btn-read:hover { background: #3b275c; }
         .btn-borrow { background: #e67e22; }
+        .btn-borrow.borrowed { background: #27ae60; }
+
+        /* Modal القراءة */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-card {
+            background: white;
+            width: 90%;
+            max-width: 650px;
+            max-height: 85vh;
+            border-radius: 10px;
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: #888;
+        }
+        .close-btn:hover { color: #000; }
+        .book-content-box {
+            margin-top: 20px;
+            line-height: 1.8;
+            color: #444;
+            white-space: pre-line;
+            background: #fafafa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #211536;
+        }
     </style>
 </head>
 <body>
@@ -106,93 +153,153 @@
 
     <div class="container">
         <h1 id="pageTitle">Book Catalogue</h1>
-        <p style="color: #666;">Explore our library collection and start reading today.</p>
+        <p style="color: #666;">Explore our library collection, borrow books, or read them directly.</p>
 
         <!-- شبكة الكتب -->
-        <div class="books-grid" id="booksGrid">
-            <!-- سيتم تعبئة الكتب تلقائياً بواسطة الكود أدناه -->
+        <div class="books-grid" id="booksGrid"></div>
+    </div>
+
+    <!-- النافذة المنبثقة لقراءة الكتاب (Reader Modal) -->
+    <div class="modal-overlay" id="readerModal">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeReader()">&times;</span>
+            <h2 id="readTitle" style="color: #211536; margin-bottom: 5px;"></h2>
+            <h4 id="readAuthor" style="color: #e67e22; margin-bottom: 15px;"></h4>
+            <div class="book-content-box" id="readContent"></div>
         </div>
     </div>
 
     <script>
-        // قاعدة بيانات الكتب مع تحديد التصنيف (Category) لكل كتاب
+        // قاعدة البيانات الشاملة للكتب مع المحتوى الكامل القابل للقراءة
         const booksData = [
             {
+                id: 1,
                 title: "Clean Code",
                 author: "Robert C. Martin",
                 category: "programming",
                 cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg",
-                desc: "A Handbook of Agile Software Craftsmanship."
+                desc: "A Handbook of Agile Software Craftsmanship.",
+                content: "Chapter 1: Clean Code\n\nEven bad code can function. But if code isn't clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code.\n\nKey Principles:\n1. Meaningful Names: Use intention-revealing names for variables and functions.\n2. Small Functions: Functions should do one thing, and do it well.\n3. Comments: Don't comment bad code—rewrite it!"
             },
             {
+                id: 2,
                 title: "Python Crash Course",
                 author: "Eric Matthes",
                 category: "programming",
                 cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg",
-                desc: "A Hands-On, Project-Based Introduction to Programming."
+                desc: "A Hands-On, Project-Based Introduction to Programming.",
+                content: "Chapter 1: Getting Started with Python\n\nPython is one of the most readable and powerful programming languages in the world today, widely used in Data Science, AI, and Web Development.\n\nIn this chapter, you will learn:\n- Installing Python and setting up VS Code.\n- Writing your first program: print('Hello, World!').\n- Understanding variables and basic data types like strings and integers."
             },
             {
+                id: 3,
                 title: "Hands-On Machine Learning",
                 author: "Aurélien Géron",
                 category: "artificial-intelligence",
                 cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Concepts, Tools, and Techniques to Build Intelligent Systems."
+                desc: "Concepts, Tools, and Techniques to Build Intelligent Systems.",
+                content: "Chapter 1: The Machine Learning Landscape\n\nWhen most people hear 'Machine Learning', they picture a robot or a futuristic AI. But ML is already around us in spam filters, recommendation engines, and voice assistants.\n\nMain Types of ML Systems:\n- Supervised Learning: Training data includes desired solutions (labels).\n- Unsupervised Learning: Training data is unlabeled.\n- Reinforcement Learning: Learning through rewards and penalties."
             },
             {
+                id: 4,
                 title: "The Design of Everyday Things",
                 author: "Don Norman",
                 category: "design",
                 cover: "https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Fundamental principles of intuitive and user-centered design."
+                desc: "Fundamental principles of intuitive and user-centered design.",
+                content: "Chapter 1: The Psychopathology of Everyday Things\n\nIf you have trouble figuring out whether to push or pull a door, it is not your fault—it is bad design.\n\nTwo essential principles for good design:\n- Discoverability: Is it possible to figure out what actions are possible?\n- Feedback: Sending information back to the user about what action has been accomplished."
             },
             {
+                id: 5,
                 title: "Python for Data Analysis",
                 author: "Wes McKinney",
                 category: "data-science",
                 cover: "https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Data Wrangling with Pandas, NumPy, and Jupyter."
+                desc: "Data Wrangling with Pandas, NumPy, and Jupyter.",
+                content: "Chapter 1: Data Analytics Essentials\n\nData Analysis refers to the processing and wrangling of data to extract actionable insights.\n\nTools Covered:\n- NumPy: Fast numerical array operations.\n- Pandas: DataFrame objects for structured data analysis.\n- Matplotlib & Seaborn: Plotting and visualization."
             },
             {
+                id: 6,
                 title: "The Lean Startup",
                 author: "Eric Ries",
                 category: "business",
                 cover: "https://m.media-amazon.com/images/I/81vvgZqCskL._AC_UF1000,1000_QL80_.jpg",
-                desc: "How Constant Innovation Creates Radically Successful Businesses."
+                desc: "How Constant Innovation Creates Radically Successful Businesses.",
+                content: "Chapter 1: Start\n\nStartup success is not the result of good genes or being in the right place at the right time. Startup success can be engineered by following the right process.\n\nThe Lean Method:\n- Build-Measure-Learn feedback loop.\n- Minimum Viable Product (MVP).\n- Pivot or Persevere decision making."
             }
         ];
 
-        // قراءة التصنيف من الرابط (URL)
+        // قراءة حالة الاستعارات السابقة
+        let borrowedBooks = JSON.parse(localStorage.getItem('borrowed_books_list')) || [];
+
+        // قراءة التصنيف من URL
         const urlParams = new URLSearchParams(window.location.search);
         const categoryParam = urlParams.get('category');
 
         const grid = document.getElementById('booksGrid');
-        
-        // تصفية الكتب حسب الرابط (لو فيه category) أو عرض الكل
+
         let displayedBooks = booksData;
         if (categoryParam) {
             displayedBooks = booksData.filter(b => b.category === categoryParam);
-            document.getElementById('pageTitle').innerText = "Catalogue: " + categoryParam.toUpperCase();
+            document.getElementById('pageTitle').innerText = "Catalogue: " + categoryParam.toUpperCase().replace('-', ' ');
         }
 
-        // عرض الكتب في الصفحة
-        if (displayedBooks.length === 0) {
-            grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; font-size: 1.1rem;">No books found in this category.</p>`;
-        } else {
-            grid.innerHTML = displayedBooks.map(book => `
-                <div class="book-card">
-                    <img src="${book.cover}" class="book-cover" alt="${book.title}">
-                    <div class="book-info">
-                        <h3 class="book-title">${book.title}</h3>
-                        <p class="book-author">${book.author}</p>
-                        <p class="book-desc">${book.desc}</p>
-                        <div class="btn-group">
-                            <button class="btn btn-read" onclick="alert('Opening ${book.title}...')">Read</button>
-                            <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
+        function renderBooks() {
+            if (displayedBooks.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; font-size: 1.1rem;">No books found in this category.</p>`;
+                return;
+            }
+
+            grid.innerHTML = displayedBooks.map(book => {
+                const isBorrowed = borrowedBooks.includes(book.id);
+                return `
+                    <div class="book-card">
+                        <img src="${book.cover}" class="book-cover" alt="${book.title}">
+                        <div class="book-info">
+                            <h3 class="book-title">${book.title}</h3>
+                            <p class="book-author">${book.author}</p>
+                            <p class="book-desc">${book.desc}</p>
+                            <div class="btn-group">
+                                <button class="btn btn-read" onclick="openReader(${book.id})">Read</button>
+                                <button class="btn btn-borrow ${isBorrowed ? 'borrowed' : ''}" onclick="toggleBorrow(${book.id})">
+                                    ${isBorrowed ? 'Borrowed ✓' : 'Borrow'}
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
+
+        // فتح كتاب للقراءة
+        function openReader(id) {
+            const book = booksData.find(b => b.id === id);
+            if (book) {
+                document.getElementById('readTitle').innerText = book.title;
+                document.getElementById('readAuthor').innerText = "By: " + book.author;
+                document.getElementById('readContent').innerText = book.content;
+                document.getElementById('readerModal').style.display = 'flex';
+            }
+        }
+
+        // إغلاق نافذة القراءة
+        function closeReader() {
+            document.getElementById('readerModal').style.display = 'none';
+        }
+
+        // زر الاستعارة
+        function toggleBorrow(id) {
+            const index = borrowedBooks.indexOf(id);
+            if (index === -1) {
+                borrowedBooks.push(id);
+            } else {
+                borrowedBooks.splice(index, 1);
+            }
+            localStorage.setItem('borrowed_books_list', JSON.stringify(borrowedBooks));
+            renderBooks();
+        }
+
+        // التشغيل الأول
+        renderBooks();
     </script>
 </body>
 </html>
