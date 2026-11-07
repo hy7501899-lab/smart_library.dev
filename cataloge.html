@@ -3,266 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catalogue - Smart Library</title>
-    <style>
-        :root {
-            --primary: #2c3e50;
-            --accent: #3498db;
-            --bg: #f8f9fa;
-            --card-bg: #ffffff;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: #333;
-        }
-
-        nav {
-            background: var(--primary);
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            padding: 0 20px;
-        }
-
-        .categories {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-        }
-
-        .cat-btn {
-            padding: 8px 16px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            background: white;
-            cursor: pointer;
-            text-decoration: none;
-            color: #555;
-            font-size: 0.9rem;
-        }
-
-        .cat-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-
-        .books-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-        }
-
-        .book-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .book-cover {
-            width: 100%;
-            height: 260px;
-            object-fit: cover;
-        }
-
-        .book-info {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-
-        .book-title {
-            font-size: 1.1rem;
-            margin-bottom: 5px;
-            color: var(--primary);
-        }
-
-        .book-author {
-            font-size: 0.85rem;
-            color: #e67e22;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        .book-desc {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-
-        .actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-read { background: #34495e; color: white; }
-        .btn-borrow { background: #e67e22; color: white; }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 25px;
-            border-radius: 8px;
-            max-width: 500px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-    </style>
+    <title>Catalogue | Smart Library</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="session.js" defer></script>
+    <script src="chatbot.js" defer></script>
 </head>
 <body>
 
-    <nav>
-        <h2>📚 Smart Library</h2>
-        <div>
+    <!-- Navigation -->
+    <header class="navbar">
+        <a href="home.html" class="logo">📚 Smart Library</a>
+        <nav>
             <a href="home.html">Home</a>
-            <a href="catalogue.html">Catalogue</a>
+            <a href="catalogue.html" class="active">Catalogue</a>
+            <a href="login.html" id="authLink">Login</a>
+            <a href="register.html" class="nav-btn" id="registerLink">Get Started</a>
+        </nav>
+    </header>
+
+    <main style="max-width: 1200px; margin: 40px auto; padding: 0 20px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 15px;">
+            <div>
+                <h1 id="catalogueTitle" style="color: #211536; margin-bottom: 5px;">Book Catalogue</h1>
+                <p id="catalogueSubtitle" style="color: #666;">Explore our complete collection of books and resources.</p>
+            </div>
+            <div>
+                <input type="text" id="searchInput" placeholder="Search books or authors..." onkeyup="searchBooks()" style="padding: 10px 15px; width: 280px; border: 1px solid #ddd; border-radius: 6px;">
+            </div>
         </div>
-    </nav>
 
-    <div class="container">
-        <div class="categories">
-            <a href="catalogue.html" class="cat-btn" id="cat-all">All Categories</a>
-            <a href="catalogue.html?category=programming" class="cat-btn" id="cat-programming">Programming</a>
-            <a href="catalogue.html?category=ai" class="cat-btn" id="cat-ai">Artificial Intelligence</a>
-            <a href="catalogue.html?category=design" class="cat-btn" id="cat-design">Design</a>
-            <a href="catalogue.html?category=business" class="cat-btn" id="cat-business">Business</a>
-            <a href="catalogue.html?category=datascience" class="cat-btn" id="cat-datascience">Data Science</a>
-            <a href="catalogue.html?category=technology" class="cat-btn" id="cat-technology">Technology</a>
+        <!-- Categories Filter Bar -->
+        <div style="display: flex; gap: 10px; margin-bottom: 30px; flex-wrap: wrap;">
+            <a href="catalogue.html" class="cat-filter-btn active" data-cat="all" style="padding: 8px 16px; border-radius: 20px; background: #eee; text-decoration: none; color: #333; font-size: 0.9rem;">All Books</a>
+            <a href="catalogue.html?category=programming" class="cat-filter-btn" data-cat="programming" style="padding: 8px 16px; border-radius: 20px; background: #eee; text-decoration: none; color: #333; font-size: 0.9rem;">Programming</a>
+            <a href="catalogue.html?category=artificial-intelligence" class="cat-filter-btn" data-cat="artificial-intelligence" style="padding: 8px 16px; border-radius: 20px; background: #eee; text-decoration: none; color: #333; font-size: 0.9rem;">Artificial Intelligence</a>
+            <a href="catalogue.html?category=design" class="cat-filter-btn" data-cat="design" style="padding: 8px 16px; border-radius: 20px; background: #eee; text-decoration: none; color: #333; font-size: 0.9rem;">Design</a>
+            <a href="catalogue.html?category=data-science" class="cat-filter-btn" data-cat="data-science" style="padding: 8px 16px; border-radius: 20px; background: #eee; text-decoration: none; color: #333; font-size: 0.9rem;">Data Science</a>
+            <a href="catalogue.html?category=business" class="cat-filter-btn" data-cat="business" style="padding: 8px 16px; border-radius: 20px; background: #eee; text-decoration: none; color: #333; font-size: 0.9rem;">Business</a>
+            <a href="catalogue.html?category=technology" class="cat-filter-btn" data-cat="technology" style="padding: 8px 16px; border-radius: 20px; background: #eee; text-decoration: none; color: #333; font-size: 0.9rem;">Technology</a>
         </div>
 
-        <div class="books-grid" id="booksContainer"></div>
-    </div>
+        <!-- Books Grid Container -->
+        <div id="booksGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px;">
+            <!-- سيتم تعبئة الكتب تلقائياً هنا -->
+        </div>
 
-    <div class="modal" id="readModal">
-        <div class="modal-content">
-            <h3 id="modalTitle"></h3>
-            <p id="modalAuthor" style="color: #e67e22; margin: 10px 0;"></p>
-            <p id="modalText" style="line-height: 1.6; white-space: pre-line;"></p>
-            <button onclick="closeModal()" style="margin-top: 15px; padding: 8px 16px; cursor: pointer;">Close</button>
+    </main>
+
+    <!-- Modal قراءة الكتاب -->
+    <div id="readModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;">
+        <div style="background: white; padding: 30px; border-radius: 10px; max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative;">
+            <span onclick="closeReadModal()" style="position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #aaa;">&times;</span>
+            <h2 id="modalBookTitle" style="color: #211536; margin-bottom: 10px;"></h2>
+            <p id="modalBookAuthor" style="color: #e67e22; font-weight: bold; margin-bottom: 20px;"></p>
+            <div id="modalBookText" style="line-height: 1.8; color: #444; white-space: pre-line;"></div>
         </div>
     </div>
 
     <script>
-        // قاعدة البيانات الشاملة لكل الأقسام
-        const allBooks = [
-            // Programming
-            { id: 1, category: 'programming', title: 'Clean Code', author: 'Robert C. Martin', cover: 'https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg', desc: 'A Handbook of Agile Software Craftsmanship.', text: 'Chapter 1: Clean Code.\nEven bad code can function. But if code isn\'t clean, it can bring a development organization to its knees.' },
-            { id: 2, category: 'programming', title: 'Python Crash Course', author: 'Eric Matthes', cover: 'https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg', desc: 'A Hands-On, Project-Based Introduction to Programming.', text: 'Chapter 1: Getting Started with Python.\nPython is a versatile and readable programming language ideal for beginners and experts.' },
-            
-            // AI
-            { id: 3, category: 'ai', title: 'Hands-On Machine Learning', author: 'Aurélien Géron', cover: 'https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg', desc: 'Concepts, Tools, and Techniques to Build Intelligent Systems.', text: 'Chapter 1: The Machine Learning Landscape.\nMachine Learning is the science of programming computers so they can learn from data.' },
-            { id: 4, category: 'ai', title: 'Deep Learning', author: 'Ian Goodfellow', cover: 'https://m.media-amazon.com/images/I/61ScEipC3-L._AC_UF1000,1000_QL80_.jpg', desc: 'An MIT Press book on deep learning fundamentals.', text: 'Chapter 1: Introduction to Neural Networks.\nDeep learning allows computational models composed of multiple processing layers to learn representations.' },
-
-            // Design
-            { id: 5, category: 'design', title: 'The Design of Everyday Things', author: 'Don Norman', cover: 'https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg', desc: 'Fundamental principles of intuitive design.', text: 'Chapter 1: The Psychopathology of Everyday Things.\nTwo of the most important characteristics of good design are discoverability and understanding.' },
-
-            // Business
-            { id: 6, category: 'business', title: 'The Lean Startup', author: 'Eric Ries', cover: 'https://m.media-amazon.com/images/I/81vvgZqCskL._AC_UF1000,1000_QL80_.jpg', desc: 'How Constant Innovation Creates Radically Successful Businesses.', text: 'Chapter 1: Start.\nStartup success is not the result of good genes or being in the right place at the right time. Startup success can be engineered.' },
-
-            // Data Science
-            { id: 7, category: 'datascience', title: 'Python for Data Analysis', author: 'Wes McKinney', cover: 'https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg', desc: 'Data Wrangling with Pandas, NumPy, and Jupyter.', text: 'Chapter 1: Data Analytics Essentials.\nData science encompasses data processing, statistical analysis, and machine learning.' },
-
-            // Technology
-            { id: 8, category: 'technology', title: 'The Pragmatic Programmer', author: 'Andrew Hunt', cover: 'https://m.media-amazon.com/images/I/71f743sOPmL._AC_UF1000,1000_QL80_.jpg', desc: 'Your Journey To Mastery in technology.', text: 'Chapter 1: A Pragmatic Philosophy.\nPragmatic Programmers take responsibility for their own career and aren\'t afraid to admit ignorance or error.' }
+        // قاعدة البيانات المتوافقة تماماً مع تصنيفات صفحة الـ Home
+        const libraryBooks = [
+            {
+                id: 1,
+                title: "Clean Code",
+                author: "Robert C. Martin",
+                category: "programming",
+                cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg",
+                desc: "A Handbook of Agile Software Craftsmanship.",
+                content: "Chapter 1: Clean Code.\nEven bad code can function. But if code isn't clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code."
+            },
+            {
+                id: 2,
+                title: "Python Crash Course",
+                author: "Eric Matthes",
+                category: "programming",
+                cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg",
+                desc: "A Hands-On, Project-Based Introduction to Programming.",
+                content: "Chapter 1: Getting Started with Python.\nPython is a versatile and readable programming language ideal for beginners and experienced developers alike. In this book, you will learn core programming concepts."
+            },
+            {
+                id: 3,
+                title: "Hands-On Machine Learning",
+                author: "Aurélien Géron",
+                category: "artificial-intelligence",
+                cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg",
+                desc: "Concepts, Tools, and Techniques to Build Intelligent Systems.",
+                content: "Chapter 1: The Machine Learning Landscape.\nMachine Learning is the science of programming computers so they can learn from data without being explicitly programmed."
+            },
+            {
+                id: 4,
+                title: "Deep Learning Fundamentals",
+                author: "Ian Goodfellow",
+                category: "artificial-intelligence",
+                cover: "https://m.media-amazon.com/images/I/61ScEipC3-L._AC_UF1000,1000_QL80_.jpg",
+                desc: "An introduction to neural networks and deep architectures.",
+                content: "Chapter 1: Introduction to Neural Networks.\nDeep learning allows computational models composed of multiple processing layers to learn representations of data with multiple levels of abstraction."
+            },
+            {
+                id: 5,
+                title: "The Design of Everyday Things",
+                author: "Don Norman",
+                category: "design",
+                cover: "https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg",
+                desc: "Fundamental principles of intuitive and user-centered design.",
+                content: "Chapter 1: The Psychopathology of Everyday Things.\nTwo of the most important characteristics of good design are discoverability and understanding. Good design makes things obvious."
+            },
+            {
+                id: 6,
+                title: "Python for Data Analysis",
+                author: "Wes McKinney",
+                category: "data-science",
+                cover: "https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg",
+                desc: "Data Wrangling with Pandas, NumPy, and Jupyter.",
+                content: "Chapter 1: Data Analytics Essentials.\nData science encompasses data processing, statistical analysis, visualization, and building predictive models using modern tools."
+            },
+            {
+                id: 7,
+                title: "The Lean Startup",
+                author: "Eric Ries",
+                category: "business",
+                cover: "https://m.media-amazon.com/images/I/81vvgZqCskL._AC_UF1000,1000_QL80_.jpg",
+                desc: "How Constant Innovation Creates Radically Successful Businesses.",
+                content: "Chapter 1: Start.\nStartup success is not the result of good genes or being in the right place at the right time. Startup success can be engineered by following the right process."
+            },
+            {
+                id: 8,
+                title: "The Pragmatic Programmer",
+                author: "Andrew Hunt",
+                category: "technology",
+                cover: "https://m.media-amazon.com/images/I/71f743sOPmL._AC_UF1000,1000_QL80_.jpg",
+                desc: "Your Journey To Mastery in modern software technology.",
+                content: "Chapter 1: A Pragmatic Philosophy.\nPragmatic Programmers take responsibility for their own career and aren't afraid to admit ignorance or error, always striving to improve."
+            }
         ];
 
-        // قراءة الـ Category من الـ URL
-        const params = new URLSearchParams(window.location.search);
-        let selectedCat = params.get('category');
+        // قراءة الـ category من الـ URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentCategory = urlParams.get('category');
 
-        // تحديد الزر النشط
-        if (selectedCat) {
-            const activeBtn = document.getElementById(`cat-${selectedCat}`);
-            if (activeBtn) activeBtn.classList.add('active');
-        } else {
-            document.getElementById('cat-all').classList.add('active');
-        }
+        function renderCatalogue() {
+            const grid = document.getElementById('booksGrid');
+            grid.innerHTML = '';
 
-        // تصفية الكتب
-        const filteredBooks = selectedCat 
-            ? allBooks.filter(b => b.category.toLowerCase() === selectedCat.toLowerCase()) 
-            : allBooks;
+            // تصفية الكتب حسب التصنيف لو موجود
+            let filtered = libraryBooks;
+            if (currentCategory) {
+                filtered = libraryBooks.filter(b => b.category === currentCategory);
+                // تلوين الزر النشط في قائمة التصنيفات
+                document.querySelectorAll('.cat-filter-btn').forEach(btn => {
+                    if(btn.getAttribute('data-cat') === currentCategory) {
+                        btn.style.background = '#211536';
+                        btn.style.color = '#fff';
+                    } else {
+                        btn.style.background = '#eee';
+                        btn.style.color = '#333';
+                    }
+                });
+            } else {
+                document.querySelector('[data-cat="all"]').style.background = '#211536';
+                document.querySelector('[data-cat="all"]').style.color = '#fff';
+            }
 
-        // عرض الكتب
-        const container = document.getElementById('booksContainer');
-        if (filteredBooks.length === 0) {
-            container.innerHTML = `<p style="grid-column: 1/-1; text-align: center; font-size: 1.2rem; color: #888; padding: 40px;">No books found in this category.</p>`;
-        } else {
-            container.innerHTML = filteredBooks.map(book => `
-                <div class="book-card">
-                    <img src="${book.cover}" class="book-cover" alt="${book.title}">
-                    <div class="book-info">
-                        <h4 class="book-title">${book.title}</h4>
-                        <span class="book-author">${book.author}</span>
-                        <p class="book-desc">${book.desc}</p>
-                        <div class="actions">
-                            <button class="btn btn-read" onclick="readBook(${book.id})">Read</button>
-                            <button class="btn btn-borrow" onclick="alert('Book borrowed successfully!')">Borrow</button>
+            if (filtered.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; font-size: 1.1rem;">No books found in this category.</p>`;
+                return;
+            }
+
+            filtered.forEach(book => {
+                const card = document.createElement('div');
+                card.style.cssText = "background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-direction: column;";
+                card.innerHTML = `
+                    <img src="${book.cover}" alt="${book.title}" style="width: 100%; height: 260px; object-fit: cover;">
+                    <div style="padding: 15px; display: flex; flex-direction: column; flex-grow: 1;">
+                        <h3 style="font-size: 1.1rem; color: #211536; margin-bottom: 5px;">${book.title}</h3>
+                        <p style="font-size: 0.85rem; color: #e67e22; font-weight: bold; margin-bottom: 8px;">${book.author}</p>
+                        <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px; flex-grow: 1;">${book.desc}</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="openReadModal(${book.id})" style="flex: 1; padding: 8px; background: #211536; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Read</button>
+                            <button onclick="alert('Book borrowed successfully!')" style="flex: 1; padding: 8px; background: #e67e22; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Borrow</button>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `;
+                grid.appendChild(card);
+            });
         }
 
-        function readBook(id) {
-            const book = allBooks.find(b => b.id === id);
+        function searchBooks() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const grid = document.getElementById('booksGrid');
+            
+            let searched = currentCategory ? libraryBooks.filter(b => b.category === currentCategory) : libraryBooks;
+            searched = searched.filter(b => b.title.toLowerCase().includes(query) || b.author.toLowerCase().includes(query));
+
+            grid.innerHTML = '';
+            if (searched.length === 0) {
+                grid.innerHTML = `<p style="grid-column: 1/-1; text-align: center; color: #777; padding: 40px; font-size: 1.1rem;">No books matched your search.</p>";
+                return;
+            }
+
+            searched.forEach(book => {
+                const card = document.createElement('div');
+                card.style.cssText = "background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06); display: flex; flex-direction: column;";
+                card.innerHTML = `
+                    <img src="${book.cover}" alt="${book.title}" style="width: 100%; height: 260px; object-fit: cover;">
+                    <div style="padding: 15px; display: flex; flex-direction: column; flex-grow: 1;">
+                        <h3 style="font-size: 1.1rem; color: #211536; margin-bottom: 5px;">${book.title}</h3>
+                        <p style="font-size: 0.85rem; color: #e67e22; font-weight: bold; margin-bottom: 8px;">${book.author}</p>
+                        <p style="font-size: 0.85rem; color: #666; margin-bottom: 15px; flex-grow: 1;">${book.desc}</p>
+                        <div style="display: flex; gap: 10px;">
+                            <button onclick="openReadModal(${book.id})" style="flex: 1; padding: 8px; background: #211536; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Read</button>
+                            <button onclick="alert('Book borrowed successfully!')" style="flex: 1; padding: 8px; background: #e67e22; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">Borrow</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function openReadModal(id) {
+            const book = libraryBooks.find(b => b.id === id);
             if (book) {
-                document.getElementById('modalTitle').innerText = book.title;
-                document.getElementById('modalAuthor').innerText = 'Author: ' + book.author;
-                document.getElementById('modalText').innerText = book.text;
+                document.getElementById('modalBookTitle').innerText = book.title;
+                document.getElementById('modalBookAuthor').innerText = "Author: " + book.author;
+                document.getElementById('modalBookText').innerText = book.content;
                 document.getElementById('readModal').style.display = 'flex';
             }
         }
 
-        function closeModal() {
+        function closeReadModal() {
             document.getElementById('readModal').style.display = 'none';
         }
+
+        // تشغيل عرض الكتب فور فتح الصفحة
+        renderCatalogue();
     </script>
 </body>
 </html>
