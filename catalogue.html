@@ -5,161 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catalogue | Smart Library</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-            color: #333;
-        }
-        nav {
-            background: #211536;
-            color: white;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        nav a {
-            color: white;
-            text-decoration: none;
-            margin-left: 20px;
-            font-weight: bold;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 40px auto;
-            padding: 0 20px;
-        }
-        h1 {
-            color: #211536;
-            margin-bottom: 5px;
-        }
-        .cat-bar {
-            display: flex;
-            gap: 10px;
-            margin: 20px 0;
-            flex-wrap: wrap;
-        }
-        .cat-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            background: #eee;
-            text-decoration: none;
-            color: #333;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
-        .cat-btn.active {
-            background: #211536;
-            color: white;
-        }
-        .books-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-            gap: 25px;
-            margin-top: 20px;
-        }
-        .book-card {
-            background: white;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            display: flex;
-            flex-direction: column;
-        }
-        .book-cover {
-            width: 100%;
-            height: 260px;
-            object-fit: cover;
-        }
-        .book-info {
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            flex-grow: 1;
-        }
-        .book-title {
-            font-size: 1.1rem;
-            color: #211536;
-            margin-bottom: 5px;
-        }
-        .book-author {
-            font-size: 0.85rem;
-            color: #e67e22;
-            font-weight: bold;
-            margin-bottom: 8px;
-        }
-        .book-desc {
-            font-size: 0.85rem;
-            color: #666;
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-        .btn-group {
-            display: flex;
-            gap: 10px;
-        }
-        .btn {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            color: white;
-            text-align: center;
-            font-size: 0.9rem;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background-color: #f8f9fa; color: #333; }
+        nav { background: #211536; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        nav a { color: white; text-decoration: none; margin-left: 20px; font-weight: bold; }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        h1 { color: #211536; margin-bottom: 5px; }
+        .cat-bar { display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
+        .cat-btn { padding: 8px 16px; border-radius: 20px; background: #eee; text-decoration: none; color: #333; font-size: 0.9rem; font-weight: bold; }
+        .cat-btn.active { background: #211536; color: white; }
+        .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 25px; margin-top: 20px; }
+        .book-card { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.08); display: flex; flex-direction: column; }
+        .book-cover { width: 100%; height: 260px; object-fit: cover; }
+        .book-info { padding: 15px; display: flex; flex-direction: column; flex-grow: 1; }
+        .book-title { font-size: 1.1rem; color: #211536; margin-bottom: 5px; }
+        .book-author { font-size: 0.85rem; color: #e67e22; font-weight: bold; margin-bottom: 8px; }
+        .book-desc { font-size: 0.85rem; color: #666; margin-bottom: 15px; flex-grow: 1; }
+        .btn-group { display: flex; gap: 10px; }
+        .btn { flex: 1; padding: 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; color: white; text-align: center; font-size: 0.9rem; }
         .btn-read { background: #211536; }
         .btn-read:hover { background: #3b275c; }
         .btn-borrow { background: #e67e22; }
         .btn-borrow.borrowed { background: #27ae60; }
 
-        /* Modal القارئ المدمج */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.75);
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-        .modal-card {
-            background: white;
-            width: 90%;
-            max-width: 750px;
-            max-height: 85vh;
-            border-radius: 12px;
-            padding: 30px;
-            overflow-y: auto;
-            position: relative;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .close-btn {
-            position: absolute;
-            top: 15px;
-            right: 20px;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #888;
-        }
+        /* Modal القارئ الداخلي */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.75); justify-content: center; align-items: center; z-index: 9999; }
+        .modal-card { background: white; width: 90%; max-width: 750px; max-height: 85vh; border-radius: 12px; padding: 30px; overflow-y: auto; position: relative; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 2rem; cursor: pointer; color: #888; }
         .close-btn:hover { color: #000; }
-        .book-reader-content {
-            margin-top: 20px;
-            line-height: 1.8;
-            color: #333;
-            background: #fafafa;
-            padding: 25px;
-            border-radius: 8px;
-            border-left: 5px solid #211536;
-            white-space: pre-line;
-            font-size: 1rem;
-        }
+        .book-reader-content { margin-top: 20px; line-height: 1.8; color: #333; background: #fafafa; padding: 25px; border-radius: 8px; border-left: 5px solid #211536; white-space: pre-line; font-size: 1rem; }
     </style>
 </head>
 <body>
@@ -176,7 +50,6 @@
         <h1 id="pageTitle">Book Catalogue (20 Books)</h1>
         <p style="color: #666;">Explore our 20 tech books and read them directly in your browser.</p>
 
-        <!-- تصنيفات الكتالوج -->
         <div class="cat-bar">
             <a href="catalogue.html" class="cat-btn" id="cat-all">All Books</a>
             <a href="catalogue.html?category=programming" class="cat-btn" id="cat-programming">Programming</a>
@@ -187,11 +60,10 @@
             <a href="catalogue.html?category=technology" class="cat-btn" id="cat-technology">Technology</a>
         </div>
 
-        <!-- شبكة عرض الكتب -->
         <div class="books-grid" id="booksGrid"></div>
     </div>
 
-    <!-- نافذة القراءة الفورية المدمجة -->
+    <!-- نافذة القراءة المدمجة -->
     <div class="modal-overlay" id="readerModal">
         <div class="modal-card">
             <span class="close-btn" onclick="closeReader()">&times;</span>
@@ -202,188 +74,27 @@
     </div>
 
     <script>
-        // قاعدة البيانات الشاملة لـ 20 كتاباً حقيقياً مع المحتوى المدمج للقراءة الفورية
         const booksData = [
-            {
-                id: 1,
-                title: "Clean Code",
-                author: "Robert C. Martin",
-                category: "programming",
-                cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg",
-                desc: "A Handbook of Agile Software Craftsmanship.",
-                text: "Chapter 1: Clean Code\n\nEven bad code can function. But if code isn't clean, it can bring a development organization to its knees. Every year, countless hours and significant resources are lost because of poorly written code.\n\nKey Principles:\n1. Meaningful Names: Use intention-revealing names for variables and functions.\n2. Small Functions: Functions should do one thing, and do it well.\n3. Comments: Don't comment bad code—rewrite it!"
-            },
-            {
-                id: 2,
-                title: "Python Crash Course",
-                author: "Eric Matthes",
-                category: "programming",
-                cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg",
-                desc: "A Hands-On, Project-Based Introduction to Programming.",
-                text: "Chapter 1: Getting Started with Python\n\nPython is one of the most readable and powerful programming languages in the world today, widely used in Data Science, AI, and Web Development.\n\nIn this chapter, you will learn:\n- Installing Python and setting up VS Code.\n- Writing your first program: print('Hello, World!').\n- Understanding variables and basic data types like strings and integers."
-            },
-            {
-                id: 3,
-                title: "The Pragmatic Programmer",
-                author: "Andrew Hunt & David Thomas",
-                category: "programming",
-                cover: "https://m.media-amazon.com/images/I/71f743sOPmL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Your Journey to Software Mastery.",
-                text: "Chapter 1: A Pragmatic Philosophy\n\nPragmatic Programmers take responsibility for their own career and aren't afraid to admit ignorance or error. They plan ahead and take ownership of their code quality.\n\nKey Concepts:\n- Don't Live with Broken Windows: Fix bad designs, wrong decisions, and poor code early.\n- DRY Principle: Don't Repeat Yourself."
-            },
-            {
-                id: 4,
-                title: "Eloquent JavaScript",
-                author: "Marijn Haverbeke",
-                category: "programming",
-                cover: "https://m.media-amazon.com/images/I/51INjpz6ZtL._AC_UF1000,1000_QL80_.jpg",
-                desc: "A Modern Introduction to Programming in JavaScript.",
-                text: "Chapter 1: Values, Types, and Operators\n\nInside the computer's world, there is only data. You can read data, modify data, and create new data.\n\nBasic Types in JavaScript:\n- Numbers: e.g., 13 or 9.81\n- Strings: e.g., 'Hello'\n- Booleans: true or false\n- Empty values: null and undefined."
-            },
-            {
-                id: 5,
-                title: "You Don't Know JS: Scope & Closures",
-                author: "Kyle Simpson",
-                category: "programming",
-                cover: "https://m.media-amazon.com/images/I/7186Y6d70+L._AC_UF1000,1000_QL80_.jpg",
-                desc: "Deep dive into the core mechanics of JavaScript.",
-                text: "Chapter 1: What is Scope?\n\nOne of the most fundamental paradigms of almost all programming languages is the ability to store values in variables, and later retrieve or modify those values.\n\nScope is the set of rules that governs how variables are looked up by name in JavaScript."
-            },
-            {
-                id: 6,
-                title: "Hands-On Machine Learning",
-                author: "Aurélien Géron",
-                category: "artificial-intelligence",
-                cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Concepts, Tools, and Techniques to Build Intelligent Systems.",
-                text: "Chapter 1: The Machine Learning Landscape\n\nMachine Learning is the science of programming computers so they can learn from data without being explicitly programmed.\n\nCategories of ML:\n- Supervised Learning: Linear Regression, Decision Trees.\n- Unsupervised Learning: Clustering (K-Means), PCA.\n- Reinforcement Learning: Q-Learning."
-            },
-            {
-                id: 7,
-                title: "Deep Learning",
-                author: "Ian Goodfellow",
-                category: "artificial-intelligence",
-                cover: "https://m.media-amazon.com/images/I/61ScEipC3-L._AC_UF1000,1000_QL80_.jpg",
-                desc: "An MIT Press foundational textbook on Deep Neural Nets.",
-                text: "Chapter 1: Introduction to Neural Networks\n\nDeep learning allows computational models composed of multiple processing layers to learn representations of data with multiple levels of abstraction.\n\nKey Concepts:\n- Multi-Layer Perceptrons (MLP)\n- Activation Functions (ReLU, Sigmoid)\n- Backpropagation & Optimization (SGD, Adam)."
-            },
-            {
-                id: 8,
-                title: "Artificial Intelligence: A Modern Approach",
-                author: "Stuart Russell & Peter Norvig",
-                category: "artificial-intelligence",
-                cover: "https://m.media-amazon.com/images/I/81m9B-40jpL._AC_UF1000,1000_QL80_.jpg",
-                desc: "The standard textbook in AI used worldwide.",
-                text: "Chapter 1: Intelligent Agents\n\nAn agent is anything that can be viewed as perceiving its environment through sensors and acting upon that environment through actuators.\n\nRationality relies on:\n- Performance measures\n- Prior knowledge of environment\n- Possible actions."
-            },
-            {
-                id: 9,
-                title: "Pattern Recognition and Machine Learning",
-                author: "Christopher M. Bishop",
-                category: "artificial-intelligence",
-                cover: "https://m.media-amazon.com/images/I/71u+L2513yL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Comprehensive guide to Bayesian stats and ML algorithms.",
-                text: "Chapter 1: Probability Theory\n\nA central concept in pattern recognition is probability. Uncertainty arises both through noise on measurements and through the finite size of data sets.\n\nBayes' Theorem:\nP(Y|X) = [P(X|Y) * P(Y)] / P(X)."
-            },
-            {
-                id: 10,
-                title: "The Design of Everyday Things",
-                author: "Don Norman",
-                category: "design",
-                cover: "https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Fundamental principles of user-centered design.",
-                text: "Chapter 1: The Psychopathology of Everyday Things\n\nIf you have trouble figuring out whether to push or pull a door, it is not your fault—it is bad design.\n\nTwo essential principles for good design:\n- Discoverability: Is it possible to figure out what actions are possible?\n- Feedback: Sending information back to the user about what action has been accomplished."
-            },
-            {
-                id: 11,
-                title: "Don't Make Me Think",
-                author: "Steve Krug",
-                category: "design",
-                cover: "https://m.media-amazon.com/images/I/71f76G3y9SL._AC_UF1000,1000_QL80_.jpg",
-                desc: "A Common Sense Approach to Web Usability.",
-                text: "Chapter 1: First Law of Usability\n\nDon't make me think! As far as is humanly possible, when a user looks at a webpage it should be self-evident, obvious, and self-explanatory.\n\nKey Principles:\n- Omit needless words.\n- Create clear visual hierarchies."
-            },
-            {
-                id: 12,
-                title: "About Face: Interaction Design",
-                author: "Alan Cooper",
-                category: "design",
-                cover: "https://m.media-amazon.com/images/I/71nFw5e75uL._AC_UF1000,1000_QL80_.jpg",
-                desc: "The definitive guide to digital product design.",
-                text: "Chapter 1: Goal-Directed Design\n\nGood interaction design focuses first on understanding user goals, rather than focusing solely on features or programming capabilities."
-            },
-            {
-                id: 13,
-                title: "Python for Data Analysis",
-                author: "Wes McKinney",
-                category: "data-science",
-                cover: "https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Data Wrangling with Pandas, NumPy, and Jupyter.",
-                text: "Chapter 1: Data Analytics Essentials\n\nData Analysis refers to the processing and wrangling of data to extract actionable insights.\n\nTools Covered:\n- NumPy: Fast numerical array operations.\n- Pandas: DataFrame objects for structured data analysis."
-            },
-            {
-                id: 14,
-                title: "Hands-On Data Science with R",
-                author: "Sal Mangiafico",
-                category: "data-science",
-                cover: "https://m.media-amazon.com/images/I/71sKxI7l1SL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Solving data science problems using R statistical software.",
-                text: "Chapter 1: Introduction to R Programming\n\nR is a language and environment for statistical computing and graphics, providing a wide variety of statistical techniques."
-            },
-            {
-                id: 15,
-                title: "Storytelling with Data",
-                author: "Cole Nussbaumer Knaflic",
-                category: "data-science",
-                cover: "https://m.media-amazon.com/images/I/71v27fVl-nL._AC_UF1000,1000_QL80_.jpg",
-                desc: "A Data Visualization Guide for Business Professionals.",
-                text: "Chapter 1: The Importance of Context\n\nDon't simply present data—tell a story with it. Understand who your audience is and what you need them to know or do."
-            },
-            {
-                id: 16,
-                title: "The Lean Startup",
-                author: "Eric Ries",
-                category: "business",
-                cover: "https://m.media-amazon.com/images/I/81vvgZqCskL._AC_UF1000,1000_QL80_.jpg",
-                desc: "How Innovation Creates Successful Businesses.",
-                text: "Chapter 1: Start\n\nStartup success is not the result of good genes or being in the right place at the right time. Startup success can be engineered by following the right process.\n\nThe Lean Method:\n- Build-Measure-Learn feedback loop.\n- Minimum Viable Product (MVP)."
-            },
-            {
-                id: 17,
-                title: "Zero to One",
-                author: "Peter Thiel",
-                category: "business",
-                cover: "https://m.media-amazon.com/images/I/71m-2tqY0mL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Notes on Startups, or How to Build the Future.",
-                text: "Chapter 1: The Challenge of the Future\n\nEvery time we create something new, we go from 0 to 1. Doing what we already know how to do takes the world from 1 to n, adding more of something familiar."
-            },
-            {
-                id: 18,
-                title: "Introduction to Algorithms",
-                author: "Thomas H. Cormen",
-                category: "technology",
-                cover: "https://m.media-amazon.com/images/I/71FXjX8M9qL._AC_UF1000,1000_QL80_.jpg",
-                desc: "The comprehensive textbook on algorithms and data structures.",
-                text: "Chapter 1: The Role of Algorithms in Computing\n\nWhat is an algorithm? Informally, an algorithm is any well-defined computational procedure that takes some value as input and produces some value as output."
-            },
-            {
-                id: 19,
-                title: "Computer Networking",
-                author: "James F. Kurose",
-                category: "technology",
-                cover: "https://m.media-amazon.com/images/I/811mZl2LzPL._AC_UF1000,1000_QL80_.jpg",
-                desc: "Modern internet architecture and networking protocols.",
-                text: "Chapter 1: Computer Networks and the Internet\n\nThe Internet is a computer network that interconnects billions of computing devices throughout the world (hosts, routers, switches)."
-            },
-            {
-                id: 20,
-                title: "Code: The Hidden Language",
-                author: "Charles Petzold",
-                category: "technology",
-                cover: "https://m.media-amazon.com/images/I/717F4sF+j1L._AC_UF1000,1000_QL80_.jpg",
-                desc: "How computers work from ground up.",
-                text: "Chapter 1: Best Friends\n\nYou are 10 years old. Your best friend lives across the street. How do you communicate at night when your parents think you're asleep? Flashlights and Morse Code!"
-            }
+            { id: 1, title: "Clean Code", author: "Robert C. Martin", category: "programming", cover: "https://m.media-amazon.com/images/I/71sBtM3Yi5L._AC_UF1000,1000_QL80_.jpg", desc: "A Handbook of Agile Software Craftsmanship.", text: "Chapter 1: Clean Code\n\nEven bad code can function. But if code isn't clean, it can bring a development organization to its knees.\n\nKey Principles:\n1. Meaningful Names\n2. Small Functions\n3. Comments: Rewrite bad code!" },
+            { id: 2, title: "Python Crash Course", author: "Eric Matthes", category: "programming", cover: "https://m.media-amazon.com/images/I/71V23u65J6L._AC_UF1000,1000_QL80_.jpg", desc: "A Hands-On Introduction to Programming.", text: "Chapter 1: Getting Started with Python\n\nPython is readable and powerful.\n- Installing Python\n- print('Hello, World!')\n- Variables and basic types." },
+            { id: 3, title: "The Pragmatic Programmer", author: "Andrew Hunt & David Thomas", category: "programming", cover: "https://m.media-amazon.com/images/I/71f743sOPmL._AC_UF1000,1000_QL80_.jpg", desc: "Your Journey to Software Mastery.", text: "Chapter 1: A Pragmatic Philosophy\n\nTake responsibility for your code.\n- Don't live with broken windows.\n- DRY Principle: Don't Repeat Yourself." },
+            { id: 4, title: "Eloquent JavaScript", author: "Marijn Haverbeke", category: "programming", cover: "https://m.media-amazon.com/images/I/51INjpz6ZtL._AC_UF1000,1000_QL80_.jpg", desc: "A Modern Intro to JavaScript.", text: "Chapter 1: Values, Types, and Operators\n\nInside the computer, there is only data.\n- Numbers, Strings, Booleans\n- Null and Undefined." },
+            { id: 5, title: "You Don't Know JS: Scope & Closures", author: "Kyle Simpson", category: "programming", cover: "https://m.media-amazon.com/images/I/7186Y6d70+L._AC_UF1000,1000_QL80_.jpg", desc: "Deep dive into JS mechanics.", text: "Chapter 1: What is Scope?\n\nScope is the set of rules that governs how variables are looked up by name in JavaScript." },
+            { id: 6, title: "Hands-On Machine Learning", author: "Aurélien Géron", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/81kqrWpORFL._AC_UF1000,1000_QL80_.jpg", desc: "Build Intelligent Systems.", text: "Chapter 1: The ML Landscape\n\n- Supervised Learning\n- Unsupervised Learning\n- Reinforcement Learning." },
+            { id: 7, title: "Deep Learning", author: "Ian Goodfellow", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/61ScEipC3-L._AC_UF1000,1000_QL80_.jpg", desc: "MIT Press textbook on Deep Neural Nets.", text: "Chapter 1: Introduction to Neural Networks\n\nMulti-layer perceptrons, activation functions, and backpropagation." },
+            { id: 8, title: "Artificial Intelligence: Modern Approach", author: "Stuart Russell & Peter Norvig", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/81m9B-40jpL._AC_UF1000,1000_QL80_.jpg", desc: "Standard AI textbook.", text: "Chapter 1: Intelligent Agents\n\nPerceiving environments through sensors and acting through actuators." },
+            { id: 9, title: "Pattern Recognition & ML", author: "Christopher Bishop", category: "artificial-intelligence", cover: "https://m.media-amazon.com/images/I/71u+L2513yL._AC_UF1000,1000_QL80_.jpg", desc: "Bayesian stats and ML algorithms.", text: "Chapter 1: Probability Theory\n\nBayes Theorem: P(Y|X) = [P(X|Y) * P(Y)] / P(X)." },
+            { id: 10, title: "The Design of Everyday Things", author: "Don Norman", category: "design", cover: "https://m.media-amazon.com/images/I/71T0y2XJ7BL._AC_UF1000,1000_QL80_.jpg", desc: "User-centered design principles.", text: "Chapter 1: Psychopathology of Everyday Things\n\nDiscoverability and Feedback in good design." },
+            { id: 11, title: "Don't Make Me Think", author: "Steve Krug", category: "design", cover: "https://m.media-amazon.com/images/I/71f76G3y9SL._AC_UF1000,1000_QL80_.jpg", desc: "Web Usability guide.", text: "Chapter 1: First Law of Usability\n\nWebpages should be self-evident and self-explanatory." },
+            { id: 12, title: "About Face: Interaction Design", author: "Alan Cooper", category: "design", cover: "https://m.media-amazon.com/images/I/71nFw5e75uL._AC_UF1000,1000_QL80_.jpg", desc: "Digital product design.", text: "Chapter 1: Goal-Directed Design\n\nFocus on user goals rather than just feature lists." },
+            { id: 13, title: "Python for Data Analysis", author: "Wes McKinney", category: "data-science", cover: "https://m.media-amazon.com/images/I/81w--G4UuLL._AC_UF1000,1000_QL80_.jpg", desc: "Pandas, NumPy & Jupyter.", text: "Chapter 1: Data Analytics Essentials\n\nProcessing, wrangling, and analyzing data using Python." },
+            { id: 14, title: "Data Science with R", author: "Sal Mangiafico", category: "data-science", cover: "https://m.media-amazon.com/images/I/71sKxI7l1SL._AC_UF1000,1000_QL80_.jpg", desc: "Statistical software guide.", text: "Chapter 1: Intro to R\n\nStatistical computing, vectors, and data frames." },
+            { id: 15, title: "Storytelling with Data", author: "Cole Knaflic", category: "data-science", cover: "https://m.media-amazon.com/images/I/71v27fVl-nL._AC_UF1000,1000_QL80_.jpg", desc: "Data Visualization guide.", text: "Chapter 1: Context is Key\n\nUnderstand your audience and communicate clearly with charts." },
+            { id: 16, title: "The Lean Startup", author: "Eric Ries", category: "business", cover: "https://m.media-amazon.com/images/I/81vvgZqCskL._AC_UF1000,1000_QL80_.jpg", desc: "Continuous innovation for business.", text: "Chapter 1: Start\n\nBuild-Measure-Learn feedback loop and MVPs." },
+            { id: 17, title: "Zero to One", author: "Peter Thiel", category: "business", cover: "https://m.media-amazon.com/images/I/71m-2tqY0mL._AC_UF1000,1000_QL80_.jpg", desc: "Notes on Startups.", text: "Chapter 1: Challenge of the Future\n\nCreating something brand new takes you from 0 to 1." },
+            { id: 18, title: "Introduction to Algorithms", author: "Thomas Cormen", category: "technology", cover: "https://m.media-amazon.com/images/I/71FXjX8M9qL._AC_UF1000,1000_QL80_.jpg", desc: "Comprehensive CLRS textbook.", text: "Chapter 1: Role of Algorithms\n\nDefinition of computational procedures and efficiency." },
+            { id: 19, title: "Computer Networking", author: "James Kurose", category: "technology", cover: "https://m.media-amazon.com/images/I/811mZl2LzPL._AC_UF1000,1000_QL80_.jpg", desc: "Top-Down Approach to Networks.", text: "Chapter 1: Networks & Internet\n\nProtocols, packets, and network edge vs core." },
+            { id: 20, title: "Code: The Hidden Language", author: "Charles Petzold", category: "technology", cover: "https://m.media-amazon.com/images/I/717F4sF+j1L._AC_UF1000,1000_QL80_.jpg", desc: "Hardware & Software basics.", text: "Chapter 1: Best Friends\n\nCommunicating using Flashlights, Codes, and Logic Gates." }
         ];
 
         let borrowedBooks = JSON.parse(localStorage.getItem('smart_borrowed_books')) || [];
@@ -417,8 +128,8 @@
                             <p class="book-author">${book.author}</p>
                             <p class="book-desc">${book.desc}</p>
                             <div class="btn-group">
-                                <button class="btn btn-read" onclick="openReader(${book.id})">Read Book 📖</button>
-                                <button class="btn btn-borrow ${isBorrowed ? 'borrowed' : ''}" onclick="toggleBorrow(${book.id})">
+                                <button type="button" class="btn btn-read" onclick="openReader(${book.id})">Read Book 📖</button>
+                                <button type="button" class="btn btn-borrow ${isBorrowed ? 'borrowed' : ''}" onclick="toggleBorrow(${book.id})">
                                     ${isBorrowed ? 'Borrowed ✓' : 'Borrow'}
                                 </button>
                             </div>
