@@ -1,0 +1,102 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue | Smart Library</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="config.js" defer></script>
+    <script src="session.js" defer></script>
+    <script src="catalogue.js" defer></script>
+    <link rel="stylesheet" href="chatbot.css">
+    <script src="chatbot.js" defer></script>
+</head>
+<body class="catalogue-page">
+
+<header class="navbar inner-navbar">
+    <a href="home.html" class="logo">📚 Smart Library</a>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="catalogue.html">Catalogue</a>
+        <a href="login.html" id="authLink">Login</a>
+        <a href="register.html" class="nav-btn" id="registerLink">Get Started</a>
+    </nav>
+</header>
+
+<main class="catalogue-main">
+    <section class="catalogue-heading">
+        <p class="subtitle">YOUR NEXT FAVORITE BOOK</p>
+        <h1>Explore Our <span>Library</span></h1>
+        <p>Discover books, learn new skills, and explore new ideas.</p>
+    </section>
+
+    <section class="catalogue-tools">
+        <input type="search" id="searchInput"
+               placeholder="🔍 Search by title or author...">
+
+        <select id="categoryFilter">
+            <option value="all">All Categories</option>
+            <option value="Programming">Programming</option>
+            <option value="AI">Artificial Intelligence</option>
+            <option value="Design">Design</option>
+            <option value="Business">Business</option>
+            <option value="Data Science">Data Science</option>
+            <option value="Technology">Technology</option>
+        </select>
+    </section>
+
+    <p id="resultsCount" class="results-count"></p>
+
+    <section id="booksGrid" class="books-grid"></section>
+</main>
+
+<footer class="site-footer">
+    <p>© 2026 Smart Library. Learn something new every day.</p>
+</footer>
+
+<!-- AI Library Chat Widget -->
+    <section id="libraryChatWidget" class="library-chat-widget">
+        <button class="chat-launcher" id="chatLauncher"
+                type="button"
+                aria-label="Open AI Library Assistant"
+                aria-expanded="false">
+            <span class="chat-launcher-icon">✦</span>
+        </button>
+
+        <section class="chat-window" id="chatWindow"
+                 aria-label="AI Library Assistant" hidden>
+            <header class="chat-header">
+                <div class="chat-avatar">📚</div>
+                <div class="chat-header-text">
+                    <h2>AI Library Assistant</h2>
+                    <p><span class="online-dot"></span> AI Live Assistant</p>
+                </div>
+                <button class="chat-close" id="chatClose"
+                        type="button" aria-label="Close chat">×</button>
+            </header>
+
+            <div class="chat-messages" id="chatMessages"
+                 aria-live="polite" aria-label="Conversation"></div>
+
+            <div class="chat-suggestions" id="chatSuggestions">
+                <button type="button" data-prompt="What books do we have in the library?">📚 Library Books</button>
+                <button type="button" data-prompt="Give me a quick recipe for pasta">🍳 Cooking Tips</button>
+                <button type="button" data-prompt="How does AI work in simple words?">🤖 AI Explained</button>
+            </div>
+
+            <form class="chat-input-area" id="chatForm">
+                <input id="chatInput" type="text"
+                       placeholder="Ask me anything..."
+                       aria-label="Your message"
+                       autocomplete="off" maxlength="1000" required>
+                <button type="submit" id="chatSendButton"
+                        aria-label="Send message">➤</button>
+            </form>
+
+            <p class="chat-disclaimer">Powered by Smart AI Assistant</p>
+        </section>
+    </section>
+
+</body>
+</html>
