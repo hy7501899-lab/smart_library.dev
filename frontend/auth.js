@@ -1,5 +1,3 @@
-// Login and registration forms. Talks to the Flask API (see session.js).
-
 const registerForm = document.getElementById("registerForm");
 const loginForm = document.getElementById("loginForm");
 
