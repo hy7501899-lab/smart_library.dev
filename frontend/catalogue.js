@@ -1,5 +1,3 @@
-// Catalogue page. Books, My Books and Favorites come from the Flask API.
-
 const booksGrid = document.getElementById("booksGrid");
 const searchInput = document.getElementById("searchInput");
 const categoryFilter = document.getElementById("categoryFilter");
