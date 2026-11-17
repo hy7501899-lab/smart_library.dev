@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Library AI Assistant</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="chatbot.js" defer></script>
+</head>
+<body>
+    <!-- AI Library Chat Widget -->
+    <section id="libraryChatWidget" class="library-chat-widget">
+        <button class="chat-launcher" id="chatLauncher"
+                type="button"
+                aria-label="Open AI Library Assistant"
+                aria-expanded="false">
+            <span class="chat-launcher-icon">✦</span>
+        </button>
+
+        <section class="chat-window" id="chatWindow"
+                 aria-label="AI Library Assistant" hidden>
+            <header class="chat-header">
+                <div class="chat-avatar">📚</div>
+                <div class="chat-header-text">
+                    <h2>AI Library Assistant</h2>
+                    <p><span class="online-dot"></span> AI Live Assistant</p>
+                </div>
+                <button class="chat-close" id="chatClose"
+                        type="button" aria-label="Close chat">×</button>
+            </header>
+
+            <div class="chat-messages" id="chatMessages"
+                 aria-live="polite" aria-label="Conversation"></div>
+
+            <div class="chat-suggestions" id="chatSuggestions">
+                <button type="button" data-prompt="What books do we have in the library?">📚 Library Books</button>
+                <button type="button" data-prompt="Give me a quick recipe for pasta">🍳 Cooking Tips</button>
+                <button type="button" data-prompt="How does AI work in simple words?">🤖 AI Explained</button>
+            </div>
+
+            <form class="chat-input-area" id="chatForm">
+                <input id="chatInput" type="text"
+                       placeholder="Ask me anything..."
+                       aria-label="Your message"
+                       autocomplete="off" maxlength="1000" required>
+                <button type="submit" id="chatSendButton"
+                        aria-label="Send message">➤</button>
+            </form>
+
+            <p class="chat-disclaimer">Powered by Smart AI Assistant</p>
+        </section>
+    </section>
+</body>
+</html>
