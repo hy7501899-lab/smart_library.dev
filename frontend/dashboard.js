@@ -1,8 +1,3 @@
-// ========================================
-// SMART LIBRARY - DASHBOARD JAVASCRIPT
-// All data comes from the Flask API (see session.js for api()).
-// ========================================
-
 "use strict";
 
 // The dashboard is for logged-in users only.
