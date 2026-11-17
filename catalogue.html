@@ -1,5 +1,4 @@
-
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -55,7 +54,7 @@
     <p>© 2026 Smart Library. Learn something new every day.</p>
 </footer>
 
-<!-- AI Library Chat Widget -->
+<!-- AI Library Chat Widget --
     <section id="libraryChatWidget" class="library-chat-widget">
         <button class="chat-launcher" id="chatLauncher"
                 type="button"
@@ -98,5 +97,57 @@
         </section>
     </section>
 
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue | Smart Library</title>
+        <link rel="stylesheet" href="catalogue.css">
+</head>
+<body>
+
+    <nav>
+        <a href="home.html" style="font-size: 1.2rem;">📚 Smart Library</a>
+        <div>
+            <a href="home.html">Home</a>
+            <a href="catalogue.html">Catalogue</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 id="pageTitle">Book Catalogue (20 Real Books)</h1>
+        <p style="color: #666;">Explore 20 real tech books. Click 'Read Book' to open the built-in reader.</p>
+
+        <div class="cat-bar">
+            <a href="catalogue.html" class="cat-btn" id="cat-all">All Books</a>
+            <a href="catalogue.html?category=programming" class="cat-btn" id="cat-programming">Programming</a>
+            <a href="catalogue.html?category=artificial-intelligence" class="cat-btn" id="cat-artificial-intelligence">AI</a>
+            <a href="catalogue.html?category=design" class="cat-btn" id="cat-design">Design</a>
+            <a href="catalogue.html?category=data-science" class="cat-btn" id="cat-data-science">Data Science</a>
+            <a href="catalogue.html?category=business" class="cat-btn" id="cat-business">Business</a>
+            <a href="catalogue.html?category=technology" class="cat-btn" id="cat-technology">Technology</a>
+        </div>
+
+        <div class="books-grid" id="booksGrid"></div>
+    </div>
+
+    <!-- Reader Modal -->
+    <div class="modal-overlay" id="readerModal">
+        <div class="modal-card">
+            <span class="close-btn" onclick="closeReader()">&times;</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding-right: 40px;">
+                <div>
+                    <h2 id="modalTitle" style="color: #211536; margin-bottom: 2px;"></h2>
+                    <h5 id="modalAuthor" style="color: #e67e22;"></h5>
+                </div>
+            </div>
+            <iframe class="pdf-frame" id="pdfFrame" src=""></iframe>
+        </div>
+    </div>
+
+        <script src="catalogue.js" defer></script>
 </body>
 </html>
